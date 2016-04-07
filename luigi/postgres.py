@@ -388,3 +388,29 @@ class PostgresQuery(rdbms.Query):
             table=self.table,
             update_id=self.update_id
         )
+
+class PostgresTarget_NewRecords(luigi.Target):
+    """
+    Target for a resource in Postgres.
+    This will rarely have to be directly instantiated by the user.
+    """
+    def __init__(
+        self, engine, target_table, predicate
+    ):
+
+        self.engine = engine
+        self.target_table = target_table
+        self.predicate = predicate
+    
+    def exists(self, connection=None):
+        if connection is None:
+            connection = self.engine.connect()
+
+        query = connection.execute("""
+            SELECT COUNT(*) as predicate_count FROM {target_table}
+            WHERE {predicate}
+        """.format(target_table = self.target_table, predicate = self.predicate))
+        result_count = query.fetchone()[0]
+        
+        return result_count > 1
+
