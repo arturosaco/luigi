@@ -836,7 +836,9 @@ class CentralPlannerTest(unittest.TestCase):
         self.sch.add_task(worker=WORKER, task_id='A')
         self.assertIsNone(self.sch.get_work(worker=WORKER)['task_id'])
 
-    def test_disable_worker_can_finish_task(self, new_status=DONE, new_deps=[]):
+    def test_disable_worker_can_finish_task(self, new_status=DONE, new_deps=None):
+        if new_deps is None:
+            new_deps = []
         self.sch.add_task(worker=WORKER, task_id='A')
         self.assertEqual('A', self.sch.get_work(worker=WORKER)['task_id'])
 

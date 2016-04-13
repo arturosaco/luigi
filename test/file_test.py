@@ -175,8 +175,12 @@ class LocalTargetTest(unittest.TestCase, FileSystemTargetTestMixin):
     def theoretical_io_modes(
             self,
             rwax='rwax',
-            bt=['', 'b', 't'],
-            plus=['', '+']):
+            bt=None,
+            plus=None):
+        if bt is None:
+            bt = ['', 'b', 't']
+        if plus is None:
+            plus = ['', '+']
         p = itertools.product(rwax, plus, bt)
         return set([''.join(c) for c in list(
             itertools.chain.from_iterable(

@@ -23,7 +23,9 @@ from luigi.cmdline import luigi_run
 
 class RetcodesTest(LuigiTestCase):
 
-    def run_and_expect(self, joined_params, retcode, extra_args=['--local-scheduler', '--no-lock']):
+    def run_and_expect(self, joined_params, retcode, extra_args=None):
+        if extra_args is None:
+            extra_args = ['--local-scheduler', '--no-lock']
         with self.assertRaises(SystemExit) as cm:
             luigi_run((joined_params.split(' ') + extra_args))
         self.assertEqual(cm.exception.code, retcode)

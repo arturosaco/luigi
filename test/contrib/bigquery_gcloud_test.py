@@ -73,7 +73,9 @@ class BigqueryGcloudTest(gcs_test._GCSBaseTestCase):
                                       table_id=self.id().split('.')[-1])
         self.addCleanup(self.bq_client.delete_table, self.table)
 
-    def create_dataset(self, data=[]):
+    def create_dataset(self, data=None):
+        if data is None:
+            data = []
         self.bq_client.delete_table(self.table)
 
         text = '\n'.join(map(json.dumps, data))
