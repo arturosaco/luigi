@@ -192,11 +192,11 @@ class Parameter(object):
             yield (self._parse_or_no_value(found), None)
         yield (self._get_value_from_config(task_name, param_name), None)
         yield (self._get_value_from_config(task_name, param_name.replace('_', '-')),
-               'Configuration [{}] {} (with dashes) should be avoided. Please use underscores.'.format(
+               'Configuration [{0}] {1} (with dashes) should be avoided. Please use underscores.'.format(
                task_name, param_name))
         if self.__config:
             yield (self._get_value_from_config(self.__config['section'], self.__config['name']),
-                   'The use of the configuration [{}] {} is deprecated. Please use [{}] {}'.format(
+                   'The use of the configuration [{0}] {1} is deprecated. Please use [{2}] {3}'.format(
                    self.__config['section'], self.__config['name'], task_name, param_name))
         yield (self._default, None)
 

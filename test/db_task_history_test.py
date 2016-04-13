@@ -129,7 +129,7 @@ class MySQLDbTaskHistoryTest(unittest.TestCase):
         try:
             print(from_utc(str(last_event.ts)))
         except ValueError:
-            self.fail("Failed to convert timestamp {} to UTC".format(last_event.ts))
+            self.fail("Failed to convert timestamp {0} to UTC".format(last_event.ts))
 
     def run_task(self, task):
         task2 = luigi.scheduler.Task(task.task_id, PENDING, [],

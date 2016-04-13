@@ -216,8 +216,8 @@ class Task(object):
 
     @property
     def pretty_id(self):
-        param_str = ', '.join('{}={}'.format(key, value) for key, value in self.params.items())
-        return '{}({})'.format(self.family, param_str)
+        param_str = ', '.join('{0}={1}'.format(key, value) for key, value in self.params.items())
+        return '{0}({1})'.format(self.family, param_str)
 
 
 class Worker(object):

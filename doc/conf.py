@@ -32,7 +32,7 @@ try:
         significance = 'Insignificant ' if not self.significant else ''
         class_name = self.__class__.__name__
         has_default = self._default != luigi.parameter._no_value
-        default = ' (defaults to {})'.format(self._default) if has_default else ''
+        default = ' (defaults to {0})'.format(self._default) if has_default else ''
         description = (': ' + self.description if self.description else '')
         return significance + class_name + default + description
 
@@ -107,7 +107,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Luigi'
-copyright = u"2011-{}, Erik Bernhardsson and Elias Freider".format(datetime.datetime.now().year)
+copyright = u"2011-{0}, Erik Bernhardsson and Elias Freider".format(datetime.datetime.now().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

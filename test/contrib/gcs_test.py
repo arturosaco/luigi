@@ -49,7 +49,7 @@ def bucket_url(suffix):
     """
     Actually it's bucket + test folder name
     """
-    return 'gs://{}/{}/{}'.format(BUCKET_NAME, TEST_FOLDER, suffix)
+    return 'gs://{0}/{1}/{2}'.format(BUCKET_NAME, TEST_FOLDER, suffix)
 
 
 class _GCSBaseTestCase(unittest.TestCase):

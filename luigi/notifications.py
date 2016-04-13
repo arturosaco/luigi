@@ -355,7 +355,7 @@ def format_task_error(headline, task, formatted_exception=None):
         ''')
 
         str_params = task.to_str_params()
-        params = '\n'.join('<tr><th>{}</th><td>{}</td></tr>'.format(*items) for items in str_params.items())
+        params = '\n'.join('<tr><th>{0}</th><td>{1}</td></tr>'.format(*items) for items in str_params.items())
         body = msg_template.format(headline=headline, name=task.task_family, param_rows=params,
                                    traceback=formatted_exception)
     else:
@@ -372,7 +372,7 @@ def format_task_error(headline, task, formatted_exception=None):
 
         str_params = task.to_str_params()
         max_width = max([0] + [len(x) for x in str_params.keys()])
-        params = '\n'.join('  {:{width}}: {}'.format(*items, width=max_width) for items in str_params.items())
+        params = '\n'.join('  {0:{width}}: {1}'.format(*items, width=max_width) for items in str_params.items())
         body = msg_template.format(headline=headline, name=task.task_family, params=params,
                                    traceback=formatted_exception)
 

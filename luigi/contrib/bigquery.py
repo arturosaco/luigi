@@ -164,7 +164,7 @@ class BigqueryClient(object):
 
         try:
             self.client.datasets().insert(projectId=dataset.project_id, body=dict(
-                {'id': '{}:{}'.format(dataset.project_id, dataset.dataset_id)}, **body)).execute()
+                {'id': '{0}:{1}'.format(dataset.project_id, dataset.dataset_id)}, **body)).execute()
         except http.HttpError as ex:
             if ex.resp.status == 409:
                 if raise_if_exists:
@@ -317,7 +317,7 @@ class BigqueryClient(object):
             status = self.client.jobs().get(projectId=project_id, jobId=job_id).execute()
             if status['status']['state'] == 'DONE':
                 if status['status'].get('errors'):
-                    raise Exception('Bigquery job failed: {}'.format(status['status']['errors']))
+                    raise Exception('Bigquery job failed: {0}'.format(status['status']['errors']))
                 return
 
             logger.info('Waiting for job %s:%s to complete...', project_id, job_id)

@@ -14,7 +14,7 @@ class TestOpenerTarget(unittest.TestCase):
     def setUp(self):
         MockTarget.fs.clear()
 
-        self.local_file = '/tmp/{}/xyz/test.txt'.format(
+        self.local_file = '/tmp/{0}/xyz/test.txt'.format(
             random.randint(0, 999999999)
         )
 
@@ -68,7 +68,7 @@ class TestOpenerTarget(unittest.TestCase):
         '''Verify basic local target url
 
         '''
-        local_file = "file://{}".format(self.local_file)
+        local_file = "file://{0}".format(self.local_file)
         target = OpenerTarget(local_file)
         self.assertEqual(type(target), LocalTarget)
 
@@ -85,7 +85,7 @@ class TestOpenerTarget(unittest.TestCase):
         lt_init_patch.return_value = None
         lt_del_patch.return_value = None
 
-        local_file = "file://{}?is_tmp".format(self.local_file)
+        local_file = "file://{0}?is_tmp".format(self.local_file)
         OpenerTarget(local_file)
         lt_init_patch.assert_called_with(self.local_file, is_tmp=True)
 

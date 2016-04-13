@@ -65,10 +65,10 @@ class TestVisualiser(ServerTestBase):
 
     def test(self):
         port = self.get_http_port()
-        print('Server port is {}'.format(port))
+        print('Server port is {0}'.format(port))
         print('Starting phantomjs')
 
-        p = subprocess.Popen('phantomjs {}/phantomjs_test.js http://localhost:{}'.format(here, port),
+        p = subprocess.Popen('phantomjs {0}/phantomjs_test.js http://localhost:{1}'.format(here, port),
                              shell=True, stdin=None)
 
         # PhantomJS may hang on an error so poll
@@ -82,7 +82,7 @@ class TestVisualiser(ServerTestBase):
         if status is None:
             raise AssertionError('PhantomJS failed to complete')
         else:
-            print('PhantomJS return status is {}'.format(status))
+            print('PhantomJS return status is {0}'.format(status))
             assert status == 0
 
 
@@ -100,7 +100,7 @@ def generate_task_families(task_class, n):
     """
     ret = {}
     for i in range(n):
-        class_name = '{}_{}'.format(task_class.task_family, i)
+        class_name = '{0}_{1}'.format(task_class.task_family, i)
         ret[class_name] = type(class_name, (task_class,), {})
 
     return ret

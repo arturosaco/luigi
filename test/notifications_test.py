@@ -119,19 +119,19 @@ class ExceptionFormatTest(unittest.TestCase):
 
     def _check_body(self, body, task, html=False):
         if html:
-            self.assertIn('<th>name</th><td>{}</td>'.format(task.task_family), body)
+            self.assertIn('<th>name</th><td>{0}</td>'.format(task.task_family), body)
             self.assertIn('<div class="highlight"', body)
             self.assertIn('Oops!', body)
 
             for param, value in task.param_kwargs.items():
-                self.assertIn('<th>{}</th><td>{}</td>'.format(param, value), body)
+                self.assertIn('<th>{0}</th><td>{1}</td>'.format(param, value), body)
         else:
-            self.assertIn('Name: {}\n'.format(task.task_family), body)
+            self.assertIn('Name: {0}\n'.format(task.task_family), body)
             self.assertIn('Parameters:\n', body)
             self.assertIn('TestException: Oops!', body)
 
             for param, value in task.param_kwargs.items():
-                self.assertIn('{}: {}\n'.format(param, value), body)
+                self.assertIn('{0}: {1}\n'.format(param, value), body)
 
     @with_config({"core": {"error-email": "a@a.a"}})
     def testEmailRecipients(self):
@@ -368,7 +368,7 @@ class TestSNSNotification(unittest.TestCase, NotificationFixture):
             SNS.Topic.assert_called_once_with(self.recipients[0])
             called_subj = SNS.Topic.return_value.publish.call_args[1]['Subject']
             self.assertTrue(len(called_subj) <= 100,
-                            "Subject can be max 100 chars long! Found {}.".format(len(called_subj)))
+                            "Subject can be max 100 chars long! Found {0}.".format(len(called_subj)))
 
 
 class Test_Notification_Dispatcher(unittest.TestCase, NotificationFixture):
@@ -384,7 +384,7 @@ class Test_Notification_Dispatcher(unittest.TestCase, NotificationFixture):
 
         expected_args = self.notification_args
 
-        with mock.patch('luigi.notifications.{}'.format(target)) as sender:
+        with mock.patch('luigi.notifications.{0}'.format(target)) as sender:
             notifications.send_email(self.subject, self.message, self.sender,
                                      self.recipients, image_png=self.image_png)
 

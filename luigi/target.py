@@ -179,7 +179,7 @@ class FileSystem(object):
         implementation.  It will just do ``move()`` if the file doesn't
         ``exists()`` already.
         """
-        warnings.warn("File system {} client doesn't support atomic mv.".format(self.__class__.__name__))
+        warnings.warn("File system {0} client doesn't support atomic mv.".format(self.__class__.__name__))
         if self.exists(dest):
             raise FileAlreadyExists()
         self.move(path, dest)
