@@ -108,7 +108,7 @@ class HdfsTarget(FileSystemTarget):
 
     def open(self, mode='r'):
         if mode not in ('r', 'w'):
-            raise ValueError("Unsupported open mode '%s'" % mode)
+            raise ValueError("Unsupported open mode '{0!s}'".format(mode))
 
         if mode == 'r':
             return self.format.pipe_reader(self.path)
@@ -128,7 +128,7 @@ class HdfsTarget(FileSystemTarget):
         if isinstance(path, HdfsTarget):
             path = path.path
         if raise_if_exists and self.fs.exists(path):
-            raise RuntimeError('Destination exists: %s' % path)
+            raise RuntimeError('Destination exists: {0!s}'.format(path))
         self.fs.rename(self.path, path)
 
     def move(self, path, raise_if_exists=False):
@@ -178,7 +178,7 @@ class HdfsTarget(FileSystemTarget):
             return False
 
     def _is_writable(self, path):
-        test_path = path + '.test_write_access-%09d' % random.randrange(1e10)
+        test_path = path + '.test_write_access-{0:09d}'.format(random.randrange(1e10))
         try:
             self.fs.touchz(test_path)
             self.fs.remove(test_path, recursive=False)

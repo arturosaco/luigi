@@ -58,7 +58,7 @@ class RemoteCalledProcessError(subprocess.CalledProcessError):
         self.host = host
 
     def __str__(self):
-        return "Command '%s' on host %s returned non-zero exit status %d" % (
+        return "Command '{0!s}' on host {1!s} returned non-zero exit status {2:d}".format(
             self.cmd, self.host, self.returncode)
 
 
@@ -75,7 +75,7 @@ class RemoteContext(object):
         self.tty = kwargs.get('tty', False)
 
     def __repr__(self):
-        return '%s(%r, %r, %r, %r, %r)' % (
+        return '{0!s}({1!r}, {2!r}, {3!r}, {4!r}, {5!r})'.format(
             type(self).__name__, self.host, self.username, self.key_file, self.connect_timeout, self.port)
 
     def __eq__(self, other):
@@ -100,7 +100,7 @@ class RemoteContext(object):
             connection_cmd.extend(["-p", self.port])
 
         if self.connect_timeout is not None:
-            connection_cmd += ['-o', 'ConnectTimeout=%d' % self.connect_timeout]
+            connection_cmd += ['-o', 'ConnectTimeout={0:d}'.format(self.connect_timeout)]
 
         if self.no_host_key_check:
             connection_cmd += ['-o', 'UserKnownHostsFile=/dev/null',
@@ -152,7 +152,7 @@ class RemoteContext(object):
         assert ready == b"ready", "Didn't get ready from remote echo"
         yield  # user code executed here
         proc.communicate()
-        assert proc.returncode == 0, "Tunnel process did an unclean exit (returncode %s)" % (proc.returncode,)
+        assert proc.returncode == 0, "Tunnel process did an unclean exit (returncode {0!s})".format(proc.returncode)
 
 
 class RemoteFileSystem(luigi.target.FileSystem):
@@ -254,8 +254,8 @@ class RemoteFileSystem(luigi.target.FileSystem):
         if folder and not self.exists(folder):
             self.remote_context.check_output(['mkdir', '-p', folder])
 
-        tmp_path = path + '-luigi-tmp-%09d' % random.randrange(0, 1e10)
-        self._scp(local_path, "%s:%s" % (self.remote_context._host_ref(), tmp_path))
+        tmp_path = path + '-luigi-tmp-{0:09d}'.format(random.randrange(0, 1e10))
+        self._scp(local_path, "{0!s}:{1!s}".format(self.remote_context._host_ref(), tmp_path))
         self.remote_context.check_output(['mv', tmp_path, path])
 
     def get(self, path, local_path):
@@ -268,8 +268,8 @@ class RemoteFileSystem(luigi.target.FileSystem):
             except OSError:
                 pass
 
-        tmp_local_path = local_path + '-luigi-tmp-%09d' % random.randrange(0, 1e10)
-        self._scp("%s:%s" % (self.remote_context._host_ref(), path), tmp_local_path)
+        tmp_local_path = local_path + '-luigi-tmp-{0:09d}'.format(random.randrange(0, 1e10))
+        self._scp("{0!s}:{1!s}".format(self.remote_context._host_ref(), path), tmp_local_path)
         os.rename(tmp_local_path, local_path)
 
 
@@ -285,7 +285,7 @@ class AtomicRemoteFileWriter(luigi.format.OutputPipeProcessWrapper):
         if folder:
             self.fs.mkdir(folder)
 
-        self.__tmp_path = self.path + '-luigi-tmp-%09d' % random.randrange(0, 1e10)
+        self.__tmp_path = self.path + '-luigi-tmp-{0:09d}'.format(random.randrange(0, 1e10))
         super(AtomicRemoteFileWriter, self).__init__(
             self.fs.remote_context._prepare_cmd(['cat', '>', self.__tmp_path]))
 

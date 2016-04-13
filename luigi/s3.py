@@ -150,7 +150,7 @@ class S3Client(FileSystem):
 
         # root
         if self._is_root(key):
-            raise InvalidDeleteException('Cannot delete root of bucket at path %s' % path)
+            raise InvalidDeleteException('Cannot delete root of bucket at path {0!s}'.format(path))
 
         # grab and validate the bucket
         s3_bucket = self.s3.get_bucket(bucket, validate=True)
@@ -163,7 +163,7 @@ class S3Client(FileSystem):
             return True
 
         if self.isdir(path) and not recursive:
-            raise InvalidDeleteException('Path %s is a directory. Must use recursive delete' % path)
+            raise InvalidDeleteException('Path {0!s} is a directory. Must use recursive delete'.format(path))
 
         delete_key_list = [
             k for k in s3_bucket.list(self._add_path_delimiter(key))]
@@ -364,8 +364,7 @@ class S3Client(FileSystem):
 
             end = datetime.datetime.now()
             duration = end - start
-            logger.info('%s : Complete : %s total keys copied in %s' %
-                        (datetime.datetime.now(), total_keys, duration))
+            logger.info('{0!s} : Complete : {1!s} total keys copied in {2!s}'.format(datetime.datetime.now(), total_keys, duration))
 
         # If the file isn't a directory just perform a simple copy
         else:
@@ -675,12 +674,12 @@ class S3Target(FileSystemTarget):
         """
         """
         if mode not in ('r', 'w'):
-            raise ValueError("Unsupported open mode '%s'" % mode)
+            raise ValueError("Unsupported open mode '{0!s}'".format(mode))
 
         if mode == 'r':
             s3_key = self.fs.get_key(self.path)
             if not s3_key:
-                raise FileNotFoundException("Could not find file at %s" % self.path)
+                raise FileNotFoundException("Could not find file at {0!s}".format(self.path))
 
             fileobj = ReadableS3File(s3_key)
             return self.format.pipe_reader(fileobj)

@@ -222,7 +222,7 @@ class HadoopRunContext(object):
 
     def kill_job(self, captured_signal=None, stack_frame=None):
         if self.application_id:
-            logger.info('Job interrupted, killing application %s' % self.application_id)
+            logger.info('Job interrupted, killing application {0!s}'.format(self.application_id))
             subprocess.call(['yarn', 'application', '-kill', self.application_id])
         elif self.job_id:
             logger.info('Job interrupted, killing job %s', self.job_id)
@@ -328,20 +328,19 @@ def run_and_track_hadoop_job(arglist, tracking_url_callback=None, env=None):
             return (out, err)
 
         # Try to fetch error logs if possible
-        message = 'Streaming job failed with exit code %d. ' % proc.returncode
+        message = 'Streaming job failed with exit code {0:d}. '.format(proc.returncode)
         if not tracking_url:
             raise HadoopJobError(message + 'Also, no tracking url found.', out, err)
 
         try:
             task_failures = fetch_task_failures(tracking_url)
         except Exception as e:
-            raise HadoopJobError(message + 'Additionally, an error occurred when fetching data from %s: %s' %
-                                 (tracking_url, e), out, err)
+            raise HadoopJobError(message + 'Additionally, an error occurred when fetching data from {0!s}: {1!s}'.format(tracking_url, e), out, err)
 
         if not task_failures:
             raise HadoopJobError(message + 'Also, could not fetch output from tasks.', out, err)
         else:
-            raise HadoopJobError(message + 'Output from tasks below:\n%s' % task_failures, out, err)
+            raise HadoopJobError(message + 'Output from tasks below:\n{0!s}'.format(task_failures), out, err)
 
     if tracking_url_callback is None:
         def tracking_url_callback(x): return None
@@ -381,7 +380,7 @@ def fetch_task_failures(tracking_url):
             continue
         # Try to get the hex-encoded traceback back from the output
         for exc in re.findall(r'luigi-exc-hex=[0-9a-f]+', data):
-            error_text.append('---------- %s:' % task_url)
+            error_text.append('---------- {0!s}:'.format(task_url))
             error_text.append(exc.split('=')[-1].decode('hex'))
 
     return '\n'.join(error_text)
@@ -438,7 +437,7 @@ class HadoopJobRunner(JobRunner):
                           " environment variable if you wish"
                           " to control where luigi.contrib.hadoop may"
                           " create temporary files and directories.")
-            self.tmp_dir = os.path.join(base_tmp_dir, 'hadoop_job_%016x' % random.getrandbits(64))
+            self.tmp_dir = os.path.join(base_tmp_dir, 'hadoop_job_{0:016x}'.format(random.getrandbits(64)))
             os.makedirs(self.tmp_dir)
         else:
             self.tmp_dir = tempfile.mkdtemp()
@@ -483,8 +482,8 @@ class HadoopJobRunner(JobRunner):
 
         files = []
         for src, dst in extra_files:
-            dst_tmp = '%s_%09d' % (dst.replace('/', '_'), random.randint(0, 999999999))
-            files += ['%s#%s' % (src, dst_tmp)]
+            dst_tmp = '{0!s}_{1:09d}'.format(dst.replace('/', '_'), random.randint(0, 999999999))
+            files += ['{0!s}#{1!s}'.format(src, dst_tmp)]
             # -files doesn't support subdirectories, so we need to create the dst_tmp -> dst manually
             job.add_link(dst_tmp, dst)
 
@@ -494,7 +493,7 @@ class HadoopJobRunner(JobRunner):
         jobconfs = job.jobconfs()
 
         for k, v in six.iteritems(self.jobconfs):
-            jobconfs.append('%s=%s' % (k, v))
+            jobconfs.append('{0!s}={1!s}'.format(k, v))
 
         for conf in jobconfs:
             arglist += ['-D', conf]
@@ -651,17 +650,17 @@ class BaseHadoopJobTask(luigi.Task):
 
     def jobconfs(self):
         jcs = []
-        jcs.append('mapred.job.name=%s' % self.task_id)
+        jcs.append('mapred.job.name={0!s}'.format(self.task_id))
         if self.mr_priority != NotImplemented:
-            jcs.append('mapred.job.priority=%s' % self.mr_priority())
+            jcs.append('mapred.job.priority={0!s}'.format(self.mr_priority()))
         pool = self._get_pool()
         if pool is not None:
             # Supporting two schedulers: fair (default) and capacity using the same option
             scheduler_type = configuration.get_config().get('hadoop', 'scheduler', 'fair')
             if scheduler_type == 'fair':
-                jcs.append('mapred.fairscheduler.pool=%s' % pool)
+                jcs.append('mapred.fairscheduler.pool={0!s}'.format(pool))
             elif scheduler_type == 'capacity':
-                jcs.append('mapred.job.queue.name=%s' % pool)
+                jcs.append('mapred.job.queue.name={0!s}'.format(pool))
         return jcs
 
     def init_local(self):
@@ -745,7 +744,7 @@ class JobTask(BaseHadoopJobTask):
         if self.reducer == NotImplemented:
             jcs.append('mapred.reduce.tasks=0')
         else:
-            jcs.append('mapred.reduce.tasks=%s' % self.n_reduce_tasks)
+            jcs.append('mapred.reduce.tasks={0!s}'.format(self.n_reduce_tasks))
         return jcs
 
     def init_mapper(self):
@@ -862,10 +861,10 @@ class JobTask(BaseHadoopJobTask):
         if len(args) == 2:
             # backwards compatibility with existing hadoop jobs
             group_name, count = args
-            print('reporter:counter:%s,%s' % (group_name, count), file=sys.stderr)
+            print('reporter:counter:{0!s},{1!s}'.format(group_name, count), file=sys.stderr)
         else:
             group, name, count = args
-            print('reporter:counter:%s,%s,%s' % (group, name, count), file=sys.stderr)
+            print('reporter:counter:{0!s},{1!s},{2!s}'.format(group, name, count), file=sys.stderr)
 
     def extra_modules(self):
         return []  # can be overridden in subclass

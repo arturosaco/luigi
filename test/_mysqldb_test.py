@@ -34,7 +34,7 @@ def _create_test_database():
                                   host=host,
                                   port=port,
                                   autocommit=True)
-    con.cursor().execute('CREATE DATABASE IF NOT EXISTS %s' % database)
+    con.cursor().execute('CREATE DATABASE IF NOT EXISTS {0!s}'.format(database))
 
 
 _create_test_database()
@@ -54,4 +54,4 @@ class MySqlTargetTest(unittest.TestCase):
 
 def drop():
     con = target.connect(autocommit=True)
-    con.cursor().execute('DROP TABLE IF EXISTS %s' % table_updates)
+    con.cursor().execute('DROP TABLE IF EXISTS {0!s}'.format(table_updates))

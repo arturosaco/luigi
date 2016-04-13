@@ -290,7 +290,7 @@ class MyHiveTask(luigi.contrib.hive.HiveQueryTask):
     param = luigi.Parameter()
 
     def query(self):
-        return 'banana banana %s' % self.param
+        return 'banana banana {0!s}'.format(self.param)
 
 
 class TestHiveTask(unittest.TestCase):

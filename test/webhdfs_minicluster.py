@@ -51,7 +51,7 @@ class WebHdfsMiniCluster(MiniCluster):
         cmd = [self._hadoop_cmd, 'jar', hadoop_jar,
                'minicluster', '-nomr', '-format']
         if nnport:
-            cmd.extend(['-nnport', "%s" % nnport])
+            cmd.extend(['-nnport', "{0!s}".format(nnport)])
         if True:
             # luigi webhdfs version
             cmd.extend(['-Ddfs.webhdfs.enabled=true'])

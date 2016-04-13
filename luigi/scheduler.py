@@ -193,7 +193,7 @@ class Task(object):
         self.runnable = False
 
     def __repr__(self):
-        return "Task(%r)" % vars(self)
+        return "Task({0!r})".format(vars(self))
 
     def add_failure(self):
         self.failures.add_failure()

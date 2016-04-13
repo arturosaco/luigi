@@ -133,8 +133,7 @@ class RemoteScheduler(Scheduler):
                 continue
         else:
             raise RPCError(
-                "Errors (%d attempts) when connecting to remote scheduler %r" %
-                (attempts, self._url),
+                "Errors ({0:d} attempts) when connecting to remote scheduler {1!r}".format(attempts, self._url),
                 last_exception
             )
         return response
@@ -147,7 +146,7 @@ class RemoteScheduler(Scheduler):
             response = json.loads(page)["response"]
             if allow_null or response is not None:
                 return response
-        raise RPCError("Received null response from remote scheduler %r" % self._url)
+        raise RPCError("Received null response from remote scheduler {0!r}".format(self._url))
 
     def ping(self, worker):
         # just one attempt, keep-alive thread will keep trying anyway

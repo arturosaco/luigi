@@ -91,7 +91,7 @@ class BananaDep(luigi.Task):
     y = luigi.Parameter(default='def')
 
     def output(self):
-        return MockTarget('banana-dep-%s-%s' % (self.x, self.y))
+        return MockTarget('banana-dep-{0!s}-{1!s}'.format(self.x, self.y))
 
     def run(self):
         self.output().open('w').close()
@@ -115,7 +115,7 @@ class Banana(luigi.Task):
             raise Exception('unknown style')
 
     def output(self):
-        return MockTarget('banana-%s-%s' % (self.x, self.y))
+        return MockTarget('banana-{0!s}-{1!s}'.format(self.x, self.y))
 
     def run(self):
         self.output().open('w').close()

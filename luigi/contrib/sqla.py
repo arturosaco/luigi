@@ -324,7 +324,7 @@ class CopyToTable(luigi.Task):
         needs_setup = (len(self.columns) == 0) or (False in [len(c) == 2 for c in self.columns]) if not self.reflect else False
         if needs_setup:
             # only names of columns specified, no types
-            raise NotImplementedError("create_table() not implemented for %r and columns types not specified" % self.table)
+            raise NotImplementedError("create_table() not implemented for {0!r} and columns types not specified".format(self.table))
         else:
             # if columns is specified as (name, type) tuples
             with engine.begin() as con:
@@ -365,7 +365,7 @@ class CopyToTable(luigi.Task):
                 yield line.strip("\n").split(self.column_separator)
 
     def run(self):
-        self._logger.info("Running task copy to table for update id %s for table %s" % (self.update_id(), self.table))
+        self._logger.info("Running task copy to table for update id {0!s} for table {1!s}".format(self.update_id(), self.table))
         output = self.output()
         engine = output.engine
         self.create_table(engine)
@@ -377,7 +377,7 @@ class CopyToTable(luigi.Task):
                 self.copy(conn, ins_rows, self.table_bound)
                 ins_rows = [dict(zip(("_" + c.key for c in self.table_bound.c), row))
                             for row in itertools.islice(rows, self.chunk_size)]
-                self._logger.info("Finished inserting %d rows into SQLAlchemy target" % len(ins_rows))
+                self._logger.info("Finished inserting {0:d} rows into SQLAlchemy target".format(len(ins_rows)))
         output.touch()
         self._logger.info("Finished inserting rows into SQLAlchemy target")
 

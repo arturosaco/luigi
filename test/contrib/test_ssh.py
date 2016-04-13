@@ -52,7 +52,7 @@ conn.sendall(b'hello')
 
 try:
     x = subprocess.check_output(
-        "ssh %s -S none -o BatchMode=yes 'echo 1'" % working_ssh_host,
+        "ssh {0!s} -S none -o BatchMode=yes 'echo 1'".format(working_ssh_host),
         shell=True
     )
     if x != b'1\n':
@@ -252,7 +252,7 @@ class TestRemoteTargetAtomicity(unittest.TestCase, target_test.FileSystemTargetT
 
 
 class TestRemoteTargetCreateDirectories(TestRemoteTargetAtomicity):
-    path = '/tmp/%s/xyz/luigi_remote_atomic_test.txt' % random.randint(0, 999999999)
+    path = '/tmp/{0!s}/xyz/luigi_remote_atomic_test.txt'.format(random.randint(0, 999999999))
 
 
 class TestRemoteTargetRelative(TestRemoteTargetAtomicity):

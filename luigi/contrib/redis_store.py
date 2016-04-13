@@ -76,7 +76,7 @@ class RedisTarget(Target):
         """
         Generate a key for the indicator hash.
         """
-        return '%s:%s' % (self.marker_prefix, self.update_id)
+        return '{0!s}:{1!s}'.format(self.marker_prefix, self.update_id)
 
     def touch(self):
         """

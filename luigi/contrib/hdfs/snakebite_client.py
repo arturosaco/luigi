@@ -179,7 +179,7 @@ class SnakebiteHdfsClient(hdfs_abstract_client.HdfsFileSystem):
         bite = self.get_bite()
         if owner:
             if group:
-                return all(bite.chown(self.list_path(path), "%s:%s" % (owner, group),
+                return all(bite.chown(self.list_path(path), "{0!s}:{1!s}".format(owner, group),
                                       recurse=recursive))
             return all(bite.chown(self.list_path(path), owner, recurse=recursive))
         return list(bite.chgrp(self.list_path(path), group, recurse=recursive))
@@ -243,7 +243,7 @@ class SnakebiteHdfsClient(hdfs_abstract_client.HdfsFileSystem):
         result = list(self.get_bite().mkdir(self.list_path(path),
                                             create_parent=parents, mode=mode))
         if raise_if_exists and "ile exists" in result[0].get('error', ''):
-            raise luigi.target.FileAlreadyExists("%s exists" % (path, ))
+            raise luigi.target.FileAlreadyExists("{0!s} exists".format(path ))
         return result
 
     def listdir(self, path, ignore_directories=False, ignore_files=False,

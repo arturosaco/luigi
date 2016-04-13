@@ -58,7 +58,7 @@ class FactorTask(luigi.Task):
         f.close()
 
     def output(self):
-        return luigi.LocalTarget(os.path.join(tempdir, 'luigi_test_factor_%d' % self.product))
+        return luigi.LocalTarget(os.path.join(tempdir, 'luigi_test_factor_{0:d}'.format(self.product)))
 
 
 class BadReqTask(luigi.Task):
@@ -500,9 +500,9 @@ class SchedulerVisualisationTest(unittest.TestCase):
         dep_graph = self._remote().inverse_dep_graph(X().task_id)
 
         def assert_has_deps(task_id, deps):
-            self.assertTrue(task_id in dep_graph, '%s not in dep_graph %s' % (task_id, dep_graph))
+            self.assertTrue(task_id in dep_graph, '{0!s} not in dep_graph {1!s}'.format(task_id, dep_graph))
             task = dep_graph[task_id]
-            self.assertEqual(sorted(task['deps']), sorted(deps), '%s does not have deps %s' % (task_id, deps))
+            self.assertEqual(sorted(task['deps']), sorted(deps), '{0!s} does not have deps {1!s}'.format(task_id, deps))
 
         assert_has_deps(X().task_id, [Y().task_id])
         assert_has_deps(Y().task_id, [Z(id=1).task_id, Z(id=2).task_id])

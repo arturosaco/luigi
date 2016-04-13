@@ -150,7 +150,7 @@ class QuerySalesforce(Task):
                            self.sandbox_name)
 
         job_id = sf.create_operation_job('query', self.object_name)
-        logger.info("Started query job %s in salesforce for object %s" % (job_id, self.object_name))
+        logger.info("Started query job {0!s} in salesforce for object {1!s}".format(job_id, self.object_name))
 
         batch_id = ''
         msg = ''
@@ -160,10 +160,10 @@ class QuerySalesforce(Task):
                     self.soql = infile.read()
 
             batch_id = sf.create_batch(job_id, self.soql)
-            logger.info("Creating new batch %s to query: %s for job: %s." % (batch_id, self.object_name, job_id))
+            logger.info("Creating new batch {0!s} to query: {1!s} for job: {2!s}.".format(batch_id, self.object_name, job_id))
             status = sf.block_on_batch(job_id, batch_id)
             if status['state'].lower() == 'failed':
-                msg = "Batch failed with message: %s" % status['state_message']
+                msg = "Batch failed with message: {0!s}".format(status['state_message'])
                 logger.error(msg)
                 # don't raise exception if it's b/c of an included relationship
                 # normal query will execute (with relationship) after bulk job is closed
@@ -176,7 +176,7 @@ class QuerySalesforce(Task):
                 with open(self.output().fn, 'w') as outfile:
                     outfile.write(data)
         finally:
-            logger.info("Closing job %s" % job_id)
+            logger.info("Closing job {0!s}".format(job_id))
             sf.close_job(job_id)
 
         if 'state_message' in status and 'foreign key relationships not supported' in status['state_message'].lower():
@@ -207,7 +207,7 @@ class SalesforceAPI(object):
         self.sandbox_name = sandbox_name
 
         if self.sandbox_name:
-            self.username += ".%s" % self.sandbox_name
+            self.username += ".{0!s}".format(self.sandbox_name)
 
         self.session_id = None
         self.server_url = None
@@ -226,19 +226,18 @@ class SalesforceAPI(object):
         response.raise_for_status()
 
         root = ET.fromstring(response.text)
-        for e in root.iter("%ssessionId" % self.SOAP_NS):
+        for e in root.iter("{0!s}sessionId".format(self.SOAP_NS)):
             if self.session_id:
                 raise Exception("Invalid login attempt.  Multiple session ids found.")
             self.session_id = e.text
 
-        for e in root.iter("%sserverUrl" % self.SOAP_NS):
+        for e in root.iter("{0!s}serverUrl".format(self.SOAP_NS)):
             if self.server_url:
                 raise Exception("Invalid login attempt.  Multiple server urls found.")
             self.server_url = e.text
 
         if not self.has_active_session():
-            raise Exception("Invalid login attempt resulted in null sessionId [%s] and/or serverUrl [%s]." %
-                            (self.session_id, self.server_url))
+            raise Exception("Invalid login attempt resulted in null sessionId [{0!s}] and/or serverUrl [{1!s}].".format(self.session_id, self.server_url))
         self.hostname = urlsplit(self.server_url).hostname
 
     def has_active_session(self):
@@ -371,7 +370,7 @@ class SalesforceAPI(object):
         response.raise_for_status()
 
         root = ET.fromstring(response.text)
-        job_id = root.find('%sid' % self.API_NS).text
+        job_id = root.find('{0!s}id'.format(self.API_NS)).text
         return job_id
 
     def get_job_details(self, job_id):
@@ -445,7 +444,7 @@ class SalesforceAPI(object):
         response.raise_for_status()
 
         root = ET.fromstring(response.text)
-        batch_id = root.find('%sid' % self.API_NS).text
+        batch_id = root.find('{0!s}id'.format(self.API_NS)).text
         return batch_id
 
     def block_on_batch(self, job_id, batch_id, sleep_time_seconds=5, max_wait_time_seconds=-1):
@@ -463,13 +462,12 @@ class SalesforceAPI(object):
         status = {}
         while max_wait_time_seconds < 0 or time.time() - start_time < max_wait_time_seconds:
             status = self._get_batch_info(job_id, batch_id)
-            logger.info("Batch %s Job %s in state %s.  %s records processed.  %s records failed." %
-                        (batch_id, job_id, status['state'], status['num_processed'], status['num_failed']))
+            logger.info("Batch {0!s} Job {1!s} in state {2!s}.  {3!s} records processed.  {4!s} records failed.".format(batch_id, job_id, status['state'], status['num_processed'], status['num_failed']))
             if status['state'].lower() in ["completed", "failed"]:
                 return status
             time.sleep(sleep_time_seconds)
 
-        raise Exception("Batch did not complete in %s seconds.  Final status was: %s" % (sleep_time_seconds, status))
+        raise Exception("Batch did not complete in {0!s} seconds.  Final status was: {1!s}".format(sleep_time_seconds, status))
 
     def get_batch_results(self, job_id, batch_id):
         """
@@ -486,7 +484,7 @@ class SalesforceAPI(object):
         response.raise_for_status()
 
         root = ET.fromstring(response.text)
-        result = root.find('%sresult' % self.API_NS).text
+        result = root.find('{0!s}result'.format(self.API_NS)).text
 
         return result
 
@@ -512,40 +510,40 @@ class SalesforceAPI(object):
         root = ET.fromstring(response.text)
 
         result = {
-            "state": root.find('%sstate' % self.API_NS).text,
-            "num_processed": root.find('%snumberRecordsProcessed' % self.API_NS).text,
-            "num_failed": root.find('%snumberRecordsFailed' % self.API_NS).text,
+            "state": root.find('{0!s}state'.format(self.API_NS)).text,
+            "num_processed": root.find('{0!s}numberRecordsProcessed'.format(self.API_NS)).text,
+            "num_failed": root.find('{0!s}numberRecordsFailed'.format(self.API_NS)).text,
         }
-        if root.find('%sstateMessage' % self.API_NS) is not None:
-            result['state_message'] = root.find('%sstateMessage' % self.API_NS).text
+        if root.find('{0!s}stateMessage'.format(self.API_NS)) is not None:
+            result['state_message'] = root.find('{0!s}stateMessage'.format(self.API_NS)).text
         return result
 
     def _get_login_url(self):
         server = "login" if not self.sandbox_name else "test"
-        return "https://%s.salesforce.com/services/Soap/u/%s" % (server, self.API_VERSION)
+        return "https://{0!s}.salesforce.com/services/Soap/u/{1!s}".format(server, self.API_VERSION)
 
     def _get_base_url(self):
-        return "https://%s/services" % self.hostname
+        return "https://{0!s}/services".format(self.hostname)
 
     def _get_bulk_base_url(self):
         # Expands on Base Url for Bulk
-        return "%s/async/%s" % (self._get_base_url(), self.API_VERSION)
+        return "{0!s}/async/{1!s}".format(self._get_base_url(), self.API_VERSION)
 
     def _get_norm_base_url(self):
         # Expands on Base Url for Norm
-        return "%s/data/v%s" % (self._get_base_url(), self.API_VERSION)
+        return "{0!s}/data/v{1!s}".format(self._get_base_url(), self.API_VERSION)
 
     def _get_norm_query_url(self):
         # Expands on Norm Base Url
-        return "%s/query" % self._get_norm_base_url()
+        return "{0!s}/query".format(self._get_norm_base_url())
 
     def _get_create_job_url(self):
         # Expands on Bulk url
-        return "%s/job" % (self._get_bulk_base_url())
+        return "{0!s}/job".format((self._get_bulk_base_url()))
 
     def _get_job_id_url(self, job_id):
         # Expands on Job Creation url
-        return "%s/%s" % (self._get_create_job_url(), job_id)
+        return "{0!s}/{1!s}".format(self._get_create_job_url(), job_id)
 
     def _get_job_details_url(self, job_id):
         # Expands on basic Job Id url
@@ -561,19 +559,19 @@ class SalesforceAPI(object):
 
     def _get_create_batch_url(self, job_id):
         # Expands on basic Job Id url
-        return "%s/batch" % (self._get_job_id_url(job_id))
+        return "{0!s}/batch".format((self._get_job_id_url(job_id)))
 
     def _get_batch_info_url(self, job_id, batch_id):
         # Expands on Batch Creation url
-        return "%s/%s" % (self._get_create_batch_url(job_id), batch_id)
+        return "{0!s}/{1!s}".format(self._get_create_batch_url(job_id), batch_id)
 
     def _get_batch_results_url(self, job_id, batch_id):
         # Expands on Batch Info url
-        return "%s/result" % (self._get_batch_info_url(job_id, batch_id))
+        return "{0!s}/result".format((self._get_batch_info_url(job_id, batch_id)))
 
     def _get_batch_result_url(self, job_id, batch_id, result_id):
         # Expands on Batch Results url
-        return "%s/%s" % (self._get_batch_results_url(job_id, batch_id), result_id)
+        return "{0!s}/{1!s}".format(self._get_batch_results_url(job_id, batch_id), result_id)
 
     def _get_login_headers(self):
         headers = {
@@ -590,7 +588,7 @@ class SalesforceAPI(object):
 
     def _get_norm_session_headers(self):
         headers = {
-            'Authorization': 'Bearer %s' % self.session_id
+            'Authorization': 'Bearer {0!s}'.format(self.session_id)
         }
         return headers
 
@@ -616,7 +614,7 @@ class SalesforceAPI(object):
     def _get_create_batch_content_headers(self, content_type):
         headers = self._get_session_headers()
         content_type = 'text/csv' if content_type.lower() == 'csv' else 'application/xml'
-        headers['Content-Type'] = "%s; charset=UTF-8" % content_type
+        headers['Content-Type'] = "{0!s}; charset=UTF-8".format(content_type)
         return headers
 
     def _get_batch_info_headers(self):
@@ -629,27 +627,27 @@ class SalesforceAPI(object):
                 xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
               <env:Body>
                 <n1:login xmlns:n1="urn:partner.soap.sforce.com">
-                  <n1:username>%s</n1:username>
-                  <n1:password>%s%s</n1:password>
+                  <n1:username>{0!s}</n1:username>
+                  <n1:password>{1!s}{2!s}</n1:password>
                 </n1:login>
               </env:Body>
             </env:Envelope>
-        """ % (self.username, self.password, self.security_token if self.sandbox_name is None else self.sb_security_token)
+        """.format(self.username, self.password, self.security_token if self.sandbox_name is None else self.sb_security_token)
 
     def _get_create_job_xml(self, operation, obj, external_id_field_name, content_type):
         external_id_field_name_element = "" if not external_id_field_name else \
-            "\n<externalIdFieldName>%s</externalIdFieldName>" % external_id_field_name
+            "\n<externalIdFieldName>{0!s}</externalIdFieldName>".format(external_id_field_name)
 
         # Note: "Unable to parse job" error may be caused by reordering fields.
         #       ExternalIdFieldName element must be before contentType element.
         return """<?xml version="1.0" encoding="UTF-8"?>
             <jobInfo xmlns="http://www.force.com/2009/06/asyncapi/dataload">
-                <operation>%s</operation>
-                <object>%s</object>
-                %s
-                <contentType>%s</contentType>
+                <operation>{0!s}</operation>
+                <object>{1!s}</object>
+                {2!s}
+                <contentType>{3!s}</contentType>
             </jobInfo>
-        """ % (operation, obj, external_id_field_name_element, content_type)
+        """.format(operation, obj, external_id_field_name_element, content_type)
 
     def _get_abort_job_xml(self):
         return """<?xml version="1.0" encoding="UTF-8"?>

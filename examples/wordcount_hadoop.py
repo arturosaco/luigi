@@ -75,7 +75,7 @@ class WordCount(luigi.contrib.hadoop.JobTask):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.contrib.hdfs.HdfsTarget('/tmp/text-count/%s' % self.date_interval)
+        return luigi.contrib.hdfs.HdfsTarget('/tmp/text-count/{0!s}'.format(self.date_interval))
 
     def mapper(self, line):
         for word in line.strip().split():

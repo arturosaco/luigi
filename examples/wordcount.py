@@ -58,7 +58,7 @@ class WordCount(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget('/var/tmp/text-count/%s' % self.date_interval)
+        return luigi.LocalTarget('/var/tmp/text-count/{0!s}'.format(self.date_interval))
 
     def run(self):
         """
@@ -76,5 +76,5 @@ class WordCount(luigi.Task):
         # output data
         f = self.output().open('w')
         for word, count in six.iteritems(count):
-            f.write("%s\t%d\n" % (word, count))
+            f.write("{0!s}\t{1:d}\n".format(word, count))
         f.close()  # WARNING: file system operations are atomic therefore if you don't close the file you lose all data

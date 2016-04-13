@@ -71,11 +71,11 @@ class MiniClusterTestCase(unittest.TestCase):
 
     @staticmethod
     def _test_dir():
-        return '/tmp/luigi_tmp_testdir_%s' % getpass.getuser()
+        return '/tmp/luigi_tmp_testdir_{0!s}'.format(getpass.getuser())
 
     @staticmethod
     def _test_file(suffix=""):
-        return '%s/luigi_tmp_testfile%s' % (MiniClusterTestCase._test_dir(), suffix)
+        return '{0!s}/luigi_tmp_testfile{1!s}'.format(MiniClusterTestCase._test_dir(), suffix)
 
 
 class MiniClusterHadoopJobRunner(luigi.contrib.hadoop.HadoopJobRunner):

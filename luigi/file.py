@@ -39,7 +39,7 @@ class atomic_file(AtomicLocalFile):
         os.rename(self.tmp_path, self.path)
 
     def generate_tmp_path(self, path):
-        return path + '-luigi-tmp-%09d' % random.randrange(0, 1e10)
+        return path + '-luigi-tmp-{0:09d}'.format(random.randrange(0, 1e10))
 
 
 class LocalFileSystem(FileSystem):
@@ -85,7 +85,7 @@ class LocalFileSystem(FileSystem):
 
     def move(self, old_path, new_path, raise_if_exists=False):
         if raise_if_exists and os.path.exists(new_path):
-            raise RuntimeError('Destination exists: %s' % new_path)
+            raise RuntimeError('Destination exists: {0!s}'.format(new_path))
         d = os.path.dirname(new_path)
         if d and not os.path.exists(d):
             self.fs.mkdir(d)
@@ -102,7 +102,7 @@ class LocalTarget(FileSystemTarget):
         if not path:
             if not is_tmp:
                 raise Exception('path or is_tmp must be set')
-            path = os.path.join(tempfile.gettempdir(), 'luigi-tmp-%09d' % random.randint(0, 999999999))
+            path = os.path.join(tempfile.gettempdir(), 'luigi-tmp-{0:09d}'.format(random.randint(0, 999999999)))
         super(LocalTarget, self).__init__(path)
         self.format = format
         self.is_tmp = is_tmp
@@ -130,7 +130,7 @@ class LocalTarget(FileSystemTarget):
             return self.format.pipe_reader(fileobj)
 
         else:
-            raise Exception('mode must be r/w (got:%s)' % mode)
+            raise Exception('mode must be r/w (got:{0!s})'.format(mode))
 
     def move(self, new_path, raise_if_exists=False):
         self.fs.move(self.path, new_path, raise_if_exists=raise_if_exists)
@@ -143,8 +143,8 @@ class LocalTarget(FileSystemTarget):
 
     def copy(self, new_path, raise_if_exists=False):
         if raise_if_exists and os.path.exists(new_path):
-            raise RuntimeError('Destination exists: %s' % new_path)
-        tmp = LocalTarget(new_path + '-luigi-tmp-%09d' % random.randrange(0, 1e10), is_tmp=True)
+            raise RuntimeError('Destination exists: {0!s}'.format(new_path))
+        tmp = LocalTarget(new_path + '-luigi-tmp-{0:09d}'.format(random.randrange(0, 1e10)), is_tmp=True)
         tmp.makedirs()
         shutil.copy(self.path, tmp.fn)
         tmp.move(new_path)

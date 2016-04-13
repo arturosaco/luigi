@@ -50,7 +50,7 @@ class WebHdfsTarget(FileSystemTarget):
 
     def open(self, mode='r'):
         if mode not in ('r', 'w'):
-            raise ValueError("Unsupported open mode '%s'" % mode)
+            raise ValueError("Unsupported open mode '{0!s}'".format(mode))
 
         if mode == 'r':
             return self.format.pipe_reader(

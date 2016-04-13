@@ -35,7 +35,7 @@ def getpcmd(pid):
     """
     if os.name == "nt":
         # Use wmic command instead of ps on Windows.
-        cmd = 'wmic path win32_process where ProcessID=%s get Commandline' % (pid, )
+        cmd = 'wmic path win32_process where ProcessID={0!s} get Commandline'.format(pid )
         with os.popen(cmd, 'r') as p:
             lines = [line for line in p.readlines() if line.strip("\r\n ") != ""]
             if lines:
@@ -109,7 +109,7 @@ def acquire_for(pid_dir, num_available=1, kill_signal=None):
     # Write pids
     pids.add(str(my_pid))
     with open(pid_file, 'w') as f:
-        f.writelines('%s\n' % (pid, ) for pid in filter(pid_cmds.__getitem__, pids))
+        f.writelines('{0!s}\n'.format(pid ) for pid in filter(pid_cmds.__getitem__, pids))
 
     # Make the file writable by all
     if os.name == 'nt':

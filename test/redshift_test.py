@@ -50,7 +50,7 @@ def generate_manifest_json(path_to_folders, file_names):
     for path_to_folder in path_to_folders:
         for file_name in file_names:
             entries.append({
-                'url': '%s/%s' % (path_to_folder, file_name),
+                'url': '{0!s}/{1!s}'.format(path_to_folder, file_name),
                 'mandatory': True
             })
     return {'entries': entries}
@@ -64,12 +64,12 @@ class TestRedshiftManifestTask(unittest.TestCase):
         bucket = client.s3.create_bucket(BUCKET)
         for key in FILES:
             k = Key(bucket)
-            k.key = '%s/%s' % (KEY, key)
+            k.key = '{0!s}/{1!s}'.format(KEY, key)
             k.set_contents_from_string('')
-        folder_path = 's3://%s/%s' % (BUCKET, KEY)
+        folder_path = 's3://{0!s}/{1!s}'.format(BUCKET, KEY)
         k = Key(bucket)
         k.key = 'manifest'
-        path = 's3://%s/%s/%s' % (BUCKET, k.key, 'test.manifest')
+        path = 's3://{0!s}/{1!s}/{2!s}'.format(BUCKET, k.key, 'test.manifest')
         folder_paths = [folder_path]
         t = redshift.RedshiftManifestTask(path, folder_paths)
         luigi.build([t], local_scheduler=True)
@@ -85,14 +85,14 @@ class TestRedshiftManifestTask(unittest.TestCase):
         for parent in [KEY, KEY_2]:
             for key in FILES:
                 k = Key(bucket)
-                k.key = '%s/%s' % (parent, key)
+                k.key = '{0!s}/{1!s}'.format(parent, key)
                 k.set_contents_from_string('')
-        folder_path_1 = 's3://%s/%s' % (BUCKET, KEY)
-        folder_path_2 = 's3://%s/%s' % (BUCKET, KEY_2)
+        folder_path_1 = 's3://{0!s}/{1!s}'.format(BUCKET, KEY)
+        folder_path_2 = 's3://{0!s}/{1!s}'.format(BUCKET, KEY_2)
         folder_paths = [folder_path_1, folder_path_2]
         k = Key(bucket)
         k.key = 'manifest'
-        path = 's3://%s/%s/%s' % (BUCKET, k.key, 'test.manifest')
+        path = 's3://{0!s}/{1!s}/{2!s}'.format(BUCKET, k.key, 'test.manifest')
         t = redshift.RedshiftManifestTask(path, folder_paths)
         luigi.build([t], local_scheduler=True)
 

@@ -270,7 +270,7 @@ class AtomicLocalFile(io.BufferedWriter):
         self.move_to_final_destination()
 
     def generate_tmp_path(self, path):
-        return os.path.join(tempfile.gettempdir(), 'luigi-s3-tmp-%09d' % random.randrange(0, 1e10))
+        return os.path.join(tempfile.gettempdir(), 'luigi-s3-tmp-{0:09d}'.format(random.randrange(0, 1e10)))
 
     def move_to_final_destination(self):
         raise NotImplementedError()

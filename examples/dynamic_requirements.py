@@ -32,7 +32,7 @@ class Config(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget('/tmp/Config_%d.txt' % self.seed)
+        return luigi.LocalTarget('/tmp/Config_{0:d}.txt'.format(self.seed))
 
     def run(self):
         time.sleep(5)
@@ -55,12 +55,12 @@ class Data(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget('/tmp/Data_%d.txt' % self.magic_number)
+        return luigi.LocalTarget('/tmp/Data_{0:d}.txt'.format(self.magic_number))
 
     def run(self):
         time.sleep(1)
         with self.output().open('w') as f:
-            f.write('%s' % self.magic_number)
+            f.write('{0!s}'.format(self.magic_number))
 
 
 class Dynamic(luigi.Task):
@@ -74,7 +74,7 @@ class Dynamic(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget('/tmp/Dynamic_%d.txt' % self.seed)
+        return luigi.LocalTarget('/tmp/Dynamic_{0:d}.txt'.format(self.seed))
 
     def run(self):
         # This could be done using regular requires method

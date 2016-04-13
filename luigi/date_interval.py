@@ -201,7 +201,7 @@ class Week(DateInterval):
         super(Week, self).__init__(date_a, date_b)
 
     def to_string(self):
-        return '%d-W%02d' % self.date_a.isocalendar()[:2]
+        return '{0:d}-W{1:02d}'.format(*self.date_a.isocalendar()[:2])
 
     @classmethod
     def from_date(cls, d):

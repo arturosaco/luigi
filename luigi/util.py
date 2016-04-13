@@ -380,7 +380,7 @@ def delegates(task_that_delegates):
         # This method can (optionally) define a couple of delegate tasks that
         # will be accessible as interfaces, meaning that the task can access
         # those tasks and run methods defined on them, etc
-        raise AttributeError('%s needs to implement the method "subtasks"' % task_that_delegates)
+        raise AttributeError('{0!s} needs to implement the method "subtasks"'.format(task_that_delegates))
 
     @task_wraps(task_that_delegates)
     class Wrapped(task_that_delegates):

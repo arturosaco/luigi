@@ -169,7 +169,7 @@ class TestRemoteTarget(unittest.TestCase):
         # manualy upload to ftp
         ftp = ftplib.FTP(HOST, USER, PWD)
         ftp.mkd("test")
-        ftp.storbinary('STOR %s' % remote_file, open(tmp_filepath, 'rb'))
+        ftp.storbinary('STOR {0!s}'.format(remote_file), open(tmp_filepath, 'rb'))
         ftp.close()
 
         # execute command

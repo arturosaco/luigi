@@ -103,7 +103,7 @@ class MockTarget(target.FileSystemTarget):
 
     def rename(self, path, raise_if_exists=False):
         if raise_if_exists and path in self.fs.get_all_data():
-            raise RuntimeError('Destination exists: %s' % path)
+            raise RuntimeError('Destination exists: {0!s}'.format(path))
         contents = self.fs.get_all_data().pop(self._fn)
         self.fs.get_all_data()[path] = contents
 

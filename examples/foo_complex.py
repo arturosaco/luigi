@@ -66,7 +66,7 @@ class Bar(luigi.Task):
        :rtype: object (:py:class:`~luigi.target.Target`)
        """
         time.sleep(1)
-        return luigi.LocalTarget('/tmp/bar/%d' % self.num)
+        return luigi.LocalTarget('/tmp/bar/{0:d}'.format(self.num))
 
 
 if __name__ == "__main__":

@@ -425,7 +425,7 @@ class JobRunnerTest(unittest.TestCase):
         yarn_lines = [
             "INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1234_5678\n",
             "INFO impl.YarnClientImpl: Submitted application application_1234_5678\n",
-            "INFO mapreduce.Job: The url to track the job: %s\n" % url,
+            "INFO mapreduce.Job: The url to track the job: {0!s}\n".format(url),
             "INFO mapreduce.Job: Running job: job_1234_5678\n",
             "INFO mapreduce.Job: Job job_1234_5678 running in uber mode : false\n",
             "INFO mapreduce.Job: Job job_1234_5678 completed successfully\n",
@@ -436,7 +436,7 @@ class JobRunnerTest(unittest.TestCase):
     def test_tracking_url_old_version(self):
         url = 'http://tracker.com/1234_5678'
         err_lines = [
-            'INFO tracking url: %s\n' % url,
+            'INFO tracking url: {0!s}\n'.format(url),
         ]
         self._run_and_track(err_lines, 0)
         self.assertEqual([url], self.tracking_urls)
@@ -449,13 +449,13 @@ class JobRunnerTest(unittest.TestCase):
         ]
         err_lines = [
             'running...\n',
-            'The url to track the job: %s\n' % urls[0],
+            'The url to track the job: {0!s}\n'.format(urls[0]),
             'done\n',
             'running another stage...\n',
-            'The url to track the job: %s\n' % urls[1],
+            'The url to track the job: {0!s}\n'.format(urls[1]),
             'done\n',
             'running another stage...\n',
-            'The url to track the job: %s\n' % urls[2],
+            'The url to track the job: {0!s}\n'.format(urls[2]),
             'done\n',
         ]
         self._run_and_track(err_lines, 0)
@@ -464,7 +464,7 @@ class JobRunnerTest(unittest.TestCase):
     def test_tracking_url_captured_on_fail(self):
         url = 'http://tracking/'
         err_lines = [
-            'The url to track the job: %s\n' % url,
+            'The url to track the job: {0!s}\n'.format(url),
         ]
         with self.assertRaises(luigi.contrib.hadoop.HadoopJobError):
             self._run_and_track(err_lines, 1)
@@ -481,7 +481,7 @@ class JobRunnerTest(unittest.TestCase):
     def test_kill_job_on_interrupt(self):
         job_id = 'job_1234_5678'
         err_lines = [
-            'FlowStep: [SomeJob()] submitted hadoop job: %s\n' % job_id,
+            'FlowStep: [SomeJob()] submitted hadoop job: {0!s}\n'.format(job_id),
             'some other line\n',
         ]
         subprocess = self._run_and_track_with_interrupt(err_lines)
@@ -491,7 +491,7 @@ class JobRunnerTest(unittest.TestCase):
         job_id = 'job_1234_5678'
         err_lines = [
             'FlowStep: [SomeJob()] submitted hadoop job: job_0000_0000\n',
-            'FlowStep: [SomeJob()] submitted hadoop job: %s\n' % job_id,
+            'FlowStep: [SomeJob()] submitted hadoop job: {0!s}\n'.format(job_id),
             'some other line\n',
         ]
         subprocess = self._run_and_track_with_interrupt(err_lines)
@@ -500,7 +500,7 @@ class JobRunnerTest(unittest.TestCase):
     def test_kill_application_on_interrupt(self):
         application_id = 'application_1234_5678'
         err_lines = [
-            'YarnClientImpl: Submitted application %s\n' % application_id,
+            'YarnClientImpl: Submitted application {0!s}\n'.format(application_id),
             'FlowStep: [SomeJob()] submitted hadoop job: job_1234_5678\n',
         ]
         subprocess = self._run_and_track_with_interrupt(err_lines)
@@ -511,7 +511,7 @@ class JobRunnerTest(unittest.TestCase):
         err_lines = [
             'YarnClientImpl: Submitted application application_0000_0000\n',
             'FlowStep: [SomeJob()] submitted hadoop job: job_0000_0000\n',
-            'YarnClientImpl: Submitted application %s\n' % application_id,
+            'YarnClientImpl: Submitted application {0!s}\n'.format(application_id),
             'FlowStep: [SomeJob()] submitted hadoop job: job_1234_5678\n',
         ]
         subprocess = self._run_and_track_with_interrupt(err_lines)

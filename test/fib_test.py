@@ -34,7 +34,7 @@ class Fib(luigi.Task):
             return []
 
     def output(self):
-        return MockTarget('/tmp/fib_%d' % self.n)
+        return MockTarget('/tmp/fib_{0:d}'.format(self.n))
 
     def run(self):
         if self.n == 0:
@@ -48,7 +48,7 @@ class Fib(luigi.Task):
                     s += int(line.strip())
 
         f = self.output().open('w')
-        f.write('%d\n' % s)
+        f.write('{0:d}\n'.format(s))
         f.close()
 
 

@@ -38,7 +38,7 @@ if six.PY3:
 
 class BaseTask(luigi.Task):
 
-    TASK_LIST = ["item%d\tproperty%d\n" % (i, i) for i in range(10)]
+    TASK_LIST = ["item{0:d}\tproperty{1:d}\n".format(i, i) for i in range(10)]
 
     def output(self):
         return MockFile("BaseTask", mirror_on_stderr=True)
@@ -271,7 +271,7 @@ class TestSQLA(unittest.TestCase):
 
             def run(self):
                 out = self.output().open("w")
-                tasks = ["item%d,property%d\n" % (i, i) for i in range(10)]
+                tasks = ["item{0:d},property{1:d}\n".format(i, i) for i in range(10)]
                 for task in tasks:
                     out.write(task)
                 out.close()

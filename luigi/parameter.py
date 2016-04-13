@@ -608,19 +608,19 @@ class TimeDeltaParameter(Parameter):
 
     def _parseIso8601(self, input):
         def field(key):
-            return r"(?P<%s>\d+)%s" % (key, key[0].upper())
+            return r"(?P<{0!s}>\d+){1!s}".format(key, key[0].upper())
 
         def optional_field(key):
-            return "(%s)?" % field(key)
+            return "({0!s})?".format(field(key))
         # A little loose: ISO 8601 does not allow weeks in combination with other fields, but this regex does (as does python timedelta)
-        regex = "P(%s|%s(T%s)?)" % (field("weeks"), optional_field("days"), "".join([optional_field(key) for key in ["hours", "minutes", "seconds"]]))
+        regex = "P({0!s}|{1!s}(T{2!s})?)".format(field("weeks"), optional_field("days"), "".join([optional_field(key) for key in ["hours", "minutes", "seconds"]]))
         return self._apply_regex(regex, input)
 
     def _parseSimple(self, input):
         keys = ["weeks", "days", "hours", "minutes", "seconds"]
         # Give the digits a regex group name from the keys, then look for text with the first letter of the key,
         # optionally followed by the rest of the word, with final char (the "s") optional
-        regex = "".join([r"((?P<%s>\d+) ?%s(%s)?(%s)? ?)?" % (k, k[0], k[1:-1], k[-1]) for k in keys])
+        regex = "".join([r"((?P<{0!s}>\d+) ?{1!s}({2!s})?({3!s})? ?)?".format(k, k[0], k[1:-1], k[-1]) for k in keys])
         return self._apply_regex(regex, input)
 
     def parse(self, input):
@@ -635,7 +635,7 @@ class TimeDeltaParameter(Parameter):
         if result:
             return result
         else:
-            raise ParameterException("Invalid time delta - could not parse %s" % input)
+            raise ParameterException("Invalid time delta - could not parse {0!s}".format(input))
 
 
 class TaskParameter(Parameter):
@@ -729,7 +729,7 @@ class FrozenOrderedDict(Mapping):
         return len(self.__dict)
 
     def __repr__(self):
-        return '<FrozenOrderedDict %s>' % repr(self.__dict)
+        return '<FrozenOrderedDict {0!s}>'.format(repr(self.__dict))
 
     def __hash__(self):
         if self.__hash is None:

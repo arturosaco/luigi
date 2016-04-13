@@ -954,7 +954,7 @@ class CentralPlannerTest(unittest.TestCase):
     def test_search_results_beyond_limit(self):
         sch = CentralPlannerScheduler(max_shown_tasks=3)
         for i in range(4):
-            sch.add_task(worker=WORKER, family='Test', params={'p': str(i)}, task_id='Test_%i' % i)
+            sch.add_task(worker=WORKER, family='Test', params={'p': str(i)}, task_id='Test_{0:d}'.format(i))
         self.assertEqual({'num_tasks': 4}, sch.task_list('PENDING', '', search='Test'))
         self.assertEqual(['Test_0'], list(sch.task_list('PENDING', '', search='0').keys()))
 

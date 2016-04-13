@@ -199,7 +199,7 @@ class TaskParameter(Base):
     value = sqlalchemy.Column(sqlalchemy.String(256))
 
     def __repr__(self):
-        return "TaskParameter(task_id=%d, name=%s, value=%s)" % (self.task_id, self.name, self.value)
+        return "TaskParameter(task_id={0:d}, name={1!s}, value={2!s})".format(self.task_id, self.name, self.value)
 
 
 class TaskEvent(Base):
@@ -213,7 +213,7 @@ class TaskEvent(Base):
     ts = sqlalchemy.Column(sqlalchemy.TIMESTAMP, index=True, nullable=False)
 
     def __repr__(self):
-        return "TaskEvent(task_id=%s, event_name=%s, ts=%s" % (self.task_id, self.event_name, self.ts)
+        return "TaskEvent(task_id={0!s}, event_name={1!s}, ts={2!s}".format(self.task_id, self.event_name, self.ts)
 
 
 class TaskRecord(Base):
@@ -237,7 +237,7 @@ class TaskRecord(Base):
         backref='task')
 
     def __repr__(self):
-        return "TaskRecord(name=%s, host=%s)" % (self.name, self.host)
+        return "TaskRecord(name={0!s}, host={1!s})".format(self.name, self.host)
 
 
 def _upgrade_schema(engine):

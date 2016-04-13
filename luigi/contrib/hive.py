@@ -141,8 +141,8 @@ class HiveCommandClient(HiveClient):
 
             return stdout and table.lower() in stdout
         else:
-            stdout = run_hive_cmd("""use %s; show partitions %s partition
-                                (%s)""" % (database, table, self.partition_spec(partition)))
+            stdout = run_hive_cmd("""use {0!s}; show partitions {1!s} partition
+                                ({2!s})""".format(database, table, self.partition_spec(partition)))
 
             if stdout:
                 return True
@@ -215,7 +215,7 @@ class MetastoreClient(HiveClient):
             return [(field_schema.name, field_schema.type) for field_schema in client.get_schema(database, table)]
 
     def partition_spec(self, partition):
-        return "/".join("%s=%s" % (k, v) for (k, v) in sorted(six.iteritems(partition), key=operator.itemgetter(0)))
+        return "/".join("{0!s}={1!s}".format(k, v) for (k, v) in sorted(six.iteritems(partition), key=operator.itemgetter(0)))
 
 
 class HiveThriftContext(object):

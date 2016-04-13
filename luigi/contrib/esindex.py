@@ -159,7 +159,7 @@ class ElasticsearchTarget(luigi.Target):
         """
         Generate an id for the indicator document.
         """
-        params = '%s:%s:%s' % (self.index, self.doc_type, self.update_id)
+        params = '{0!s}:{1!s}:{2!s}'.format(self.index, self.doc_type, self.update_id)
         return hashlib.sha1(params.encode('utf-8')).hexdigest()
 
     def touch(self):

@@ -100,7 +100,7 @@ class PigJobTask(luigi.Task):
         opts = self.pig_options()
 
         def line(k, v):
-            return ('%s=%s%s' % (k, v, os.linesep)).encode('utf-8')
+            return ('{0!s}={1!s}{2!s}'.format(k, v, os.linesep)).encode('utf-8')
 
         with tempfile.NamedTemporaryFile() as param_file, tempfile.NamedTemporaryFile() as prop_file:
             if self.pig_parameters():
@@ -163,7 +163,7 @@ class PigJobTask(luigi.Task):
         else:
             logger.error("Error when running script:\n%s", self.pig_script_path())
             logger.error(err)
-            raise PigJobError("Pig script failed with return value: %s" % (proc.returncode,), err=err)
+            raise PigJobError("Pig script failed with return value: {0!s}".format(proc.returncode), err=err)
 
 
 class PigRunContext(object):
@@ -178,7 +178,7 @@ class PigRunContext(object):
     def kill_job(self, captured_signal=None, stack_frame=None):
         if self.job_id:
             logger.info('Job interrupted, killing job %s', self.job_id)
-            subprocess.call(['pig', '-e', '"kill %s"' % self.job_id])
+            subprocess.call(['pig', '-e', '"kill {0!s}"'.format(self.job_id)])
         if captured_signal is not None:
             # adding 128 gives the exit code corresponding to a signal
             sys.exit(128 + captured_signal)

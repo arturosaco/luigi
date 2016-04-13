@@ -41,7 +41,7 @@ import luigi.parameter
 logger = logging.getLogger("luigi-interface")
 
 
-DEFAULT_CLIENT_EMAIL = 'luigi-client@%s' % socket.gethostname()
+DEFAULT_CLIENT_EMAIL = 'luigi-client@{0!s}'.format(socket.gethostname())
 DEBUG = False
 
 
@@ -114,7 +114,7 @@ def wrap_traceback(traceback):
             formatter = HtmlFormatter(noclasses=True)
             wrapped = highlight(traceback, PythonTracebackLexer(), formatter)
         else:
-            wrapped = '<pre>%s</pre>' % traceback
+            wrapped = '<pre>{0!s}</pre>'.format(traceback)
     else:
         wrapped = traceback
 
@@ -311,7 +311,7 @@ def _prefix(subject):
     config = configuration.get_config()
     email_prefix = config.get('core', 'email-prefix', None)
     if email_prefix is not None:
-        subject = "%s %s" % (email_prefix, subject)
+        subject = "{0!s} {1!s}".format(email_prefix, subject)
     return subject
 
 

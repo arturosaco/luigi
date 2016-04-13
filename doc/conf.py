@@ -62,7 +62,7 @@ def _warn_node(self, msg, node):
     http://stackoverflow.com/questions/12772927/specifying-an-online-image-in-sphinx-restructuredtext-format
     """
     if not msg.startswith('nonlocal image URI found:'):
-        self._warnfunc(msg, '%s:%s' % get_source_line(node))
+        self._warnfunc(msg, '{0!s}:{1!s}'.format(*get_source_line(node)))
 
 sphinx.environment.BuildEnvironment.warn_node = _warn_node
 

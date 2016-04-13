@@ -233,8 +233,8 @@ class LocalTargetTest(unittest.TestCase, FileSystemTargetTestMixin):
 
 
 class LocalTargetCreateDirectoriesTest(LocalTargetTest):
-    path = '/tmp/%s/xyz/test.txt' % random.randint(0, 999999999)
-    copy = '/tmp/%s/xyz_2/copy.txt' % random.randint(0, 999999999)
+    path = '/tmp/{0!s}/xyz/test.txt'.format(random.randint(0, 999999999))
+    copy = '/tmp/{0!s}/xyz_2/copy.txt'.format(random.randint(0, 999999999))
 
 
 class LocalTargetRelativeTest(LocalTargetTest):

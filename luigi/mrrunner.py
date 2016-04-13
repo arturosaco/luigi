@@ -54,7 +54,7 @@ class Runner(object):
         elif kind == "reduce":
             self.job.run_reducer(stdin, stdout)
         else:
-            raise Exception('weird command: %s' % kind)
+            raise Exception('weird command: {0!s}'.format(kind))
 
     def extract_packages_archive(self):
         if not os.path.exists("packages.tar"):
@@ -70,7 +70,7 @@ class Runner(object):
 
 def print_exception(exc):
     tb = traceback.format_exc()
-    print('luigi-exc-hex=%s' % tb.encode('hex'), file=sys.stderr)
+    print('luigi-exc-hex={0!s}'.format(tb.encode('hex')), file=sys.stderr)
 
 
 def main(args=None, stdin=sys.stdin, stdout=sys.stdout, print_exception=print_exception):

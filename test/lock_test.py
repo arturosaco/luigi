@@ -61,14 +61,14 @@ class LockTest(unittest.TestCase):
 
     def test_acquiring_taken_lock(self):
         with open(self.pid_file, 'w') as f:
-            f.write('%d\n' % (self.pid, ))
+            f.write('{0:d}\n'.format(self.pid ))
 
         acquired = luigi.lock.acquire_for(self.pid_dir)
         self.assertFalse(acquired)
 
     def test_acquiring_partially_taken_lock(self):
         with open(self.pid_file, 'w') as f:
-            f.write('%d\n' % (self.pid, ))
+            f.write('{0:d}\n'.format(self.pid ))
 
         acquired = luigi.lock.acquire_for(self.pid_dir, 2)
         self.assertTrue(acquired)
@@ -79,7 +79,7 @@ class LockTest(unittest.TestCase):
     def test_acquiring_lock_from_missing_process(self):
         fake_pid = 99999
         with open(self.pid_file, 'w') as f:
-            f.write('%d\n' % (fake_pid, ))
+            f.write('{0:d}\n'.format(fake_pid ))
 
         acquired = luigi.lock.acquire_for(self.pid_dir)
         self.assertTrue(acquired)
@@ -90,7 +90,7 @@ class LockTest(unittest.TestCase):
     @mock.patch('os.kill')
     def test_take_lock_with_kill(self, kill_fn):
         with open(self.pid_file, 'w') as f:
-            f.write('%d\n' % (self.pid,))
+            f.write('{0:d}\n'.format(self.pid))
 
         kill_signal = 77777
         acquired = luigi.lock.acquire_for(self.pid_dir, kill_signal=kill_signal)

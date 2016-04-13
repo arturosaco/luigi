@@ -172,7 +172,7 @@ class ConsistentMockOutput(object):
     param = luigi.IntParameter(default=1)
 
     def output(self):
-        return MockTarget('/%s/%u' % (self.__class__.__name__, self.param))
+        return MockTarget('/{0!s}/{1:d}'.format(self.__class__.__name__, self.param))
 
     def produce_output(self):
         with self.output().open('w') as o:

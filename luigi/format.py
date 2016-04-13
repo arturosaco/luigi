@@ -119,7 +119,7 @@ class InputPipeProcessWrapper(object):
         if self._process.returncode not in (0, 141, 128 - 141):
             # 141 == 128 + 13 == 128 + SIGPIPE - normally processes exit with 128 + {reiceived SIG}
             # 128 - 141 == -13 == -SIGPIPE, sometimes python receives -13 for some subprocesses
-            raise RuntimeError('Error reading from pipe. Subcommand exited with non-zero exit status %s.' % self._process.returncode)
+            raise RuntimeError('Error reading from pipe. Subcommand exited with non-zero exit status {0!s}.'.format(self._process.returncode))
 
     def close(self):
         self._finish()
@@ -223,7 +223,7 @@ class OutputPipeProcessWrapper(object):
             if self._output_pipe is not None:
                 self._output_pipe.close()
         else:
-            raise RuntimeError('Error when executing command %s' % self._command)
+            raise RuntimeError('Error when executing command {0!s}'.format(self._command))
 
     def abort(self):
         self._finish()

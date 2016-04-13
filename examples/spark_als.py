@@ -43,7 +43,7 @@ class UserItemMatrix(luigi.Task):
         w = self.output().open('w')
         for user in range(self.data_size):
             track = int(random.random() * self.data_size)
-            w.write('%d\%d\%f' % (user, track, 1.0))
+            w.write('{0:d}\{1:d}\{2:f}'.format(user, track, 1.0))
         w.close()
 
     def output(self):

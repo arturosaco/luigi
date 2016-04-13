@@ -192,7 +192,7 @@ class SGEJobTask(luigi.Task):
 
         # Set up temp folder in shared directory (trim to max filename length)
         base_tmp_dir = self.shared_tmp_dir
-        random_id = '%016x' % random.getrandbits(64)
+        random_id = '{0:016x}'.format(random.getrandbits(64))
         folder_name = self.task_id + '-' + random_id
         self.tmp_dir = os.path.join(base_tmp_dir, folder_name)
         max_filename_length = os.fstatvfs(0).f_namemax
@@ -261,7 +261,7 @@ class SGEJobTask(luigi.Task):
 
         # Now delete the temporaries, if they're there.
         if self.tmp_dir and os.path.exists(self.tmp_dir):
-            logger.info('Removing temporary directory %s' % self.tmp_dir)
+            logger.info('Removing temporary directory {0!s}'.format(self.tmp_dir))
             shutil.rmtree(self.tmp_dir)
 
     def _track_job(self):
@@ -290,8 +290,8 @@ class SGEJobTask(luigi.Task):
                 break
             else:
                 logger.info('Job status is UNKNOWN!')
-                logger.info('Status is : %s' % sge_status)
-                raise Exception("job status isn't one of ['r', 'qw', 'E*', 't', 'u']: %s" % sge_status)
+                logger.info('Status is : {0!s}'.format(sge_status))
+                raise Exception("job status isn't one of ['r', 'qw', 'E*', 't', 'u']: {0!s}".format(sge_status))
 
 
 class LocalSGEJobTask(SGEJobTask):

@@ -499,7 +499,7 @@ class BigqueryLoadTask(MixinBigqueryBulkComplete, luigi.Task):
 
     def run(self):
         output = self.output()
-        assert isinstance(output, BigqueryTarget), 'Output should be a bigquery target, not %s' % (output)
+        assert isinstance(output, BigqueryTarget), 'Output should be a bigquery target, not {0!s}'.format((output))
 
         bq_client = output.client
 
@@ -569,7 +569,7 @@ class BigqueryRunQueryTask(MixinBigqueryBulkComplete, luigi.Task):
 
     def run(self):
         output = self.output()
-        assert isinstance(output, BigqueryTarget), 'Output should be a bigquery target, not %s' % (output)
+        assert isinstance(output, BigqueryTarget), 'Output should be a bigquery target, not {0!s}'.format((output))
 
         query = self.query
         assert query, 'No query was provided'
@@ -619,7 +619,7 @@ class BigqueryCreateViewTask(luigi.Task):
 
     def complete(self):
         output = self.output()
-        assert isinstance(output, BigqueryTarget), 'Output must be a bigquery target, not %s' % (output)
+        assert isinstance(output, BigqueryTarget), 'Output must be a bigquery target, not {0!s}'.format((output))
 
         if not output.exists():
             return False
@@ -629,7 +629,7 @@ class BigqueryCreateViewTask(luigi.Task):
 
     def run(self):
         output = self.output()
-        assert isinstance(output, BigqueryTarget), 'Output must be a bigquery target, not %s' % (output)
+        assert isinstance(output, BigqueryTarget), 'Output must be a bigquery target, not {0!s}'.format((output))
 
         view = self.view
         assert view, 'No view was provided'

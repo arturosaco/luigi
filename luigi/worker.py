@@ -170,7 +170,7 @@ class TaskProcess(multiprocessing.Process):
                 missing = [dep.task_id for dep in self.task.deps() if not dep.complete()]
                 if missing:
                     deps = 'dependency' if len(missing) == 1 else 'dependencies'
-                    raise RuntimeError('Unfulfilled %s at run time: %s' % (deps, ', '.join(missing)))
+                    raise RuntimeError('Unfulfilled {0!s} at run time: {1!s}'.format(deps, ', '.join(missing)))
             self.task.trigger_event(Event.START, self.task)
             t0 = time.time()
             status = None
@@ -352,7 +352,7 @@ class KeepAliveThread(threading.Thread):
         while True:
             self._should_stop.wait(self._ping_interval)
             if self._should_stop.is_set():
-                logger.info("Worker %s was stopped. Shutting down Keep-Alive thread" % self._worker_id)
+                logger.info("Worker {0!s} was stopped. Shutting down Keep-Alive thread".format(self._worker_id))
                 break
             with fork_lock:
                 try:
@@ -379,7 +379,7 @@ class Worker(object):
         self._worker_info = self._generate_worker_info()
 
         if not worker_id:
-            worker_id = 'Worker(%s)' % ', '.join(['%s=%s' % (k, v) for k, v in self._worker_info])
+            worker_id = 'Worker({0!s})'.format(', '.join(['{0!s}={1!s}'.format(k, v) for k, v in self._worker_info]))
 
         self._config = worker(**kwargs)
 
@@ -460,7 +460,7 @@ class Worker(object):
     def _generate_worker_info(self):
         # Generate as much info as possible about the worker
         # Some of these calls might not be available on all OS's
-        args = [('salt', '%09d' % random.randrange(0, 999999999)),
+        args = [('salt', '{0:09d}'.format(random.randrange(0, 999999999))),
                 ('workers', self.worker_processes)]
         try:
             args += [('host', socket.gethostname())]
@@ -484,11 +484,11 @@ class Worker(object):
 
     def _validate_task(self, task):
         if not isinstance(task, Task):
-            raise TaskException('Can not schedule non-task %s' % task)
+            raise TaskException('Can not schedule non-task {0!s}'.format(task))
 
         if not task.initialized():
             # we can't get the repr of it since it's not initialized...
-            raise TaskException('Task of class %s not initialized. Did you override __init__ and forget to call super(...).__init__?' % task.__class__.__name__)
+            raise TaskException('Task of class {0!s} not initialized. Did you override __init__ and forget to call super(...).__init__?'.format(task.__class__.__name__))
 
     def _log_complete_error(self, task, tb):
         log_msg = "Will not schedule {task} or any dependencies due to error in complete() method:\n{tb}".format(task=task, tb=tb)
@@ -659,7 +659,7 @@ class Worker(object):
         if is_complete not in (True, False):
             if isinstance(is_complete, TracebackWrapper):
                 raise AsyncCompletionException(is_complete.trace)
-            raise Exception("Return value of Task.complete() must be boolean (was %r)" % is_complete)
+            raise Exception("Return value of Task.complete() must be boolean (was {0!r})".format(is_complete))
 
     def _add_worker(self):
         self._worker_info.append(('first_task', self._first_task))
@@ -706,9 +706,9 @@ class Worker(object):
                               task_name=r['task_family'],
                               params_str=r['task_params'])
             except TaskClassException as ex:
-                msg = 'Cannot find task for %s' % task_id
+                msg = 'Cannot find task for {0!s}'.format(task_id)
                 logger.exception(msg)
-                subject = 'Luigi: %s' % msg
+                subject = 'Luigi: {0!s}'.format(msg)
                 error_message = notifications.wrap_traceback(ex)
                 notifications.send_error_email(subject, error_message)
                 self._add_task(worker=self._id, task_id=task_id, status=FAILED, runnable=False,
@@ -758,10 +758,10 @@ class Worker(object):
         """
         for task_id, p in six.iteritems(self._running_tasks):
             if not p.is_alive() and p.exitcode:
-                error_msg = 'Task %s died unexpectedly with exit code %s' % (task_id, p.exitcode)
+                error_msg = 'Task {0!s} died unexpectedly with exit code {1!s}'.format(task_id, p.exitcode)
             elif p.timeout_time is not None and time.time() > float(p.timeout_time) and p.is_alive():
                 p.terminate()
-                error_msg = 'Task %s timed out and was terminated.' % task_id
+                error_msg = 'Task {0!s} timed out and was terminated.'.format(task_id)
             else:
                 continue
 

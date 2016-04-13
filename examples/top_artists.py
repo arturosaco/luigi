@@ -156,7 +156,7 @@ class AggregateArtistsHadoop(luigi.contrib.hadoop.JobTask):
         :rtype: object (:py:class:`luigi.target.Target`)
         """
         return luigi.contrib.hdfs.HdfsTarget(
-            "data/artist_streams_%s.tsv" % self.date_interval,
+            "data/artist_streams_{0!s}.tsv".format(self.date_interval),
             format=luigi.contrib.hdfs.PlainDir
         )
 
@@ -223,7 +223,7 @@ class Top10Artists(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget("data/top_artists_%s.tsv" % self.date_interval)
+        return luigi.LocalTarget("data/top_artists_{0!s}.tsv".format(self.date_interval))
 
     def run(self):
         top_10 = nlargest(10, self._input_iterator())

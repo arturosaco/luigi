@@ -121,7 +121,7 @@ class HdfsClient(hdfs_abstract_client.HdfsFileSystem):
             owner = ''
         if group is None:
             group = ''
-        ownership = "%s:%s" % (owner, group)
+        ownership = "{0!s}:{1!s}".format(owner, group)
         if recursive:
             cmd = load_hadoop_cmd() + ['fs', '-chown', '-R', ownership, path]
         else:
@@ -203,7 +203,7 @@ class HdfsClient(hdfs_abstract_client.HdfsFileSystem):
             if include_type:
                 extra_data += (line_type,)
             if include_time:
-                time_str = '%sT%s' % (data[-3], data[-2])
+                time_str = '{0!s}T{1!s}'.format(data[-3], data[-2])
                 modification_time = datetime.datetime.strptime(time_str,
                                                                '%Y-%m-%dT%H:%M')
                 extra_data += (modification_time,)

@@ -48,7 +48,7 @@ class DummyS3CopyToTable(luigi.contrib.redshift.S3CopyToTable):
     prune_date = ''
 
     def s3_load_path(self):
-        return 's3://%s/%s' % (BUCKET, KEY)
+        return 's3://{0!s}/{1!s}'.format(BUCKET, KEY)
 
 
 class DummyS3CopyToTempTable(DummyS3CopyToTable):
@@ -123,7 +123,7 @@ class TestS3CopyToTable(unittest.TestCase):
                                            .cursor
                                            .return_value)
         assert mock_cursor.execute.call_args_list[0][0][0].startswith(
-            "CREATE  TABLE %s" % task.table)
+            "CREATE  TABLE {0!s}".format(task.table))
 
         return
 
@@ -208,7 +208,7 @@ class DummyRedshiftUnloadTask(luigi.contrib.redshift.RedshiftUnloadTask):
     aws_access_key_id = 'AWS_ACCESS_KEY'
     aws_secret_access_key = 'AWS_SECRET_KEY'
 
-    s3_unload_path = 's3://%s/%s' % (BUCKET, KEY)
+    s3_unload_path = 's3://{0!s}/{1!s}'.format(BUCKET, KEY)
     unload_options = "DELIMITER ',' ADDQUOTES GZIP ALLOWOVERWRITE PARALLEL OFF"
 
     def query(self):

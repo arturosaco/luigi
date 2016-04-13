@@ -204,7 +204,7 @@ class ScaldingJobRunner(luigi.contrib.hadoop.JobRunner):
         scalding_core = self.get_scalding_core()
         libjars = ','.join(filter(None, jars))
         arglist = luigi.contrib.hdfs.load_hadoop_cmd() + ['jar', scalding_core, '-libjars', libjars]
-        arglist += ['-D%s' % c for c in job.jobconfs()]
+        arglist += ['-D{0!s}'.format(c) for c in job.jobconfs()]
 
         job_class = job.job_class() or self.get_job_class(job.source())
         arglist += [job_class, '--hdfs']

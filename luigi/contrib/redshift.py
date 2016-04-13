@@ -177,7 +177,7 @@ class S3CopyToTable(rdbms.CopyToTable):
         return []
 
     def truncate_table(self, connection):
-        query = "truncate %s" % self.table
+        query = "truncate {0!s}".format(self.table)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -185,7 +185,7 @@ class S3CopyToTable(rdbms.CopyToTable):
             cursor.close()
 
     def prune(self, connection):
-        query = "delete from %s where %s >= %s" % (self.prune_table, self.prune_column, self.prune_date)
+        query = "delete from {0!s} where {1!s} >= {2!s}".format(self.prune_table, self.prune_column, self.prune_date)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -256,10 +256,10 @@ class S3CopyToTable(rdbms.CopyToTable):
         """
         logger.info("Inserting file: %s", f)
         cursor.execute("""
-         COPY %s from '%s'
-         CREDENTIALS 'aws_access_key_id=%s;aws_secret_access_key=%s'
-         %s
-         ;""" % (self.table, f, self.aws_access_key_id,
+         COPY {0!s} from '{1!s}'
+         CREDENTIALS 'aws_access_key_id={2!s};aws_secret_access_key={3!s}'
+         {4!s}
+         ;""".format(self.table, f, self.aws_access_key_id,
                  self.aws_secret_access_key, self.copy_options))
 
     def output(self):
@@ -367,11 +367,11 @@ class S3CopyJSONToTable(S3CopyToTable):
         """
 
         cursor.execute("""
-         COPY %s from '%s'
-         CREDENTIALS 'aws_access_key_id=%s;aws_secret_access_key=%s'
-         JSON AS '%s' %s
-         %s
-         ;""" % (self.table, f, self.aws_access_key_id,
+         COPY {0!s} from '{1!s}'
+         CREDENTIALS 'aws_access_key_id={2!s};aws_secret_access_key={3!s}'
+         JSON AS '{4!s}' {5!s}
+         {6!s}
+         ;""".format(self.table, f, self.aws_access_key_id,
                  self.aws_secret_access_key, self.jsonpath,
                  self.copy_json_options, self.copy_options))
 
@@ -410,7 +410,7 @@ class RedshiftManifestTask(S3PathTask):
             client = s3.fs
             for file_name in client.list(s3.path):
                 entries.append({
-                    'url': '%s/%s' % (folder_path, file_name),
+                    'url': '{0!s}/{1!s}'.format(folder_path, file_name),
                     'mandatory': True
                 })
         manifest = {'entries': entries}

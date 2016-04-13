@@ -91,7 +91,7 @@ class Bar(luigi.Task):
         self.output().open('w').close()
 
     def output(self):
-        return luigi.LocalTarget('/tmp/bar/%d' % self.num)
+        return luigi.LocalTarget('/tmp/bar/{0:d}'.format(self.num))
 
 
 class DateTask(luigi.Task):

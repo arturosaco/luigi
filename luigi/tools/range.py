@@ -171,7 +171,7 @@ class RangeBase(luigi.WrapperTask):
     def _format_range(self, datetimes):
         param_first = self._format_datetime(datetimes[0])
         param_last = self._format_datetime(datetimes[-1])
-        return '[%s, %s]' % (param_first, param_last)
+        return '[{0!s}, {1!s}]'.format(param_first, param_last)
 
     def _instantiate_task_cls(self, param):
         if self.param_name is None:
@@ -372,9 +372,9 @@ def _constrain_glob(glob, paths, limit=5):
         """
         chars = sorted(chars)
         if len(chars) > 1 and ord(chars[-1]) - ord(chars[0]) == len(chars) - 1:
-            return '[%s-%s]' % (chars[0], chars[-1])
+            return '[{0!s}-{1!s}]'.format(chars[0], chars[-1])
         else:
-            return '[%s]' % ''.join(chars)
+            return '[{0!s}]'.format(''.join(chars))
 
     current = {glob: paths}
     while True:
@@ -422,7 +422,7 @@ def _get_per_location_glob(tasks, outputs, regexes):
 
     for m, p, t in zip(matches, paths, tasks):
         if m is None:
-            raise NotImplementedError("Couldn't deduce datehour representation in output path %r of task %s" % (p, t))
+            raise NotImplementedError("Couldn't deduce datehour representation in output path {0!r} of task {1!s}".format(p, t))
 
     n_groups = len(matches[0].groups())
     # the most common position of every group is likely
@@ -455,12 +455,12 @@ def _get_filesystems_and_globs(datetime_to_task, datetime_to_re):
 
     for o, t in zip(sample_outputs, sample_tasks):
         if len(o) != len(sample_outputs[0]):
-            raise NotImplementedError("Outputs must be consistent over time, sorry; was %r for %r and %r for %r" % (o, t, sample_outputs[0], sample_tasks[0]))
+            raise NotImplementedError("Outputs must be consistent over time, sorry; was {0!r} for {1!r} and {2!r} for {3!r}".format(o, t, sample_outputs[0], sample_tasks[0]))
             # TODO fall back on requiring last couple of days? to avoid astonishing blocking when changes like that are deployed
             # erm, actually it's not hard to test entire hours_back..hours_forward and split into consistent subranges FIXME?
         for target in o:
             if not isinstance(target, FileSystemTarget):
-                raise NotImplementedError("Output targets must be instances of FileSystemTarget; was %r for %r" % (target, t))
+                raise NotImplementedError("Output targets must be instances of FileSystemTarget; was {0!r} for {1!r}".format(target, t))
 
     for o in zip(*sample_outputs):  # transposed, so here we're iterating over logical outputs, not datetimes
         glob = _get_per_location_glob(sample_tasks, o, regexes)

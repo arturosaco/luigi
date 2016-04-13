@@ -240,29 +240,29 @@ class Task(object):
 
         # In case any exceptions are thrown, create a helpful description of how the Task was invoked
         # TODO: should we detect non-reprable arguments? These will lead to mysterious errors
-        exc_desc = '%s[args=%s, kwargs=%s]' % (task_name, args, kwargs)
+        exc_desc = '{0!s}[args={1!s}, kwargs={2!s}]'.format(task_name, args, kwargs)
 
         # Fill in the positional arguments
         positional_params = [(n, p) for n, p in params if p.positional]
         for i, arg in enumerate(args):
             if i >= len(positional_params):
-                raise parameter.UnknownParameterException('%s: takes at most %d parameters (%d given)' % (exc_desc, len(positional_params), len(args)))
+                raise parameter.UnknownParameterException('{0!s}: takes at most {1:d} parameters ({2:d} given)'.format(exc_desc, len(positional_params), len(args)))
             param_name, param_obj = positional_params[i]
             result[param_name] = param_obj.normalize(arg)
 
         # Then the keyword arguments
         for param_name, arg in six.iteritems(kwargs):
             if param_name in result:
-                raise parameter.DuplicateParameterException('%s: parameter %s was already set as a positional parameter' % (exc_desc, param_name))
+                raise parameter.DuplicateParameterException('{0!s}: parameter {1!s} was already set as a positional parameter'.format(exc_desc, param_name))
             if param_name not in params_dict:
-                raise parameter.UnknownParameterException('%s: unknown parameter %s' % (exc_desc, param_name))
+                raise parameter.UnknownParameterException('{0!s}: unknown parameter {1!s}'.format(exc_desc, param_name))
             result[param_name] = params_dict[param_name].normalize(arg)
 
         # Then use the defaults for anything not filled in
         for param_name, param_obj in params:
             if param_name not in result:
                 if not param_obj.has_task_value(task_name, param_name):
-                    raise parameter.MissingParameterException("%s: requires the '%s' parameter to be set" % (exc_desc, param_name))
+                    raise parameter.MissingParameterException("{0!s}: requires the '{1!s}' parameter to be set".format(exc_desc, param_name))
                 result[param_name] = param_obj.task_value(task_name, param_name)
 
         def list_to_tuple(x):
@@ -365,7 +365,7 @@ class Task(object):
         param_objs = dict(params)
         for param_name, param_value in param_values:
             if param_objs[param_name].significant:
-                repr_parts.append('%s=%s' % (param_name, param_objs[param_name].serialize(param_value)))
+                repr_parts.append('{0!s}={1!s}'.format(param_name, param_objs[param_name].serialize(param_value)))
 
         task_str = '{}({})'.format(self.task_family, ', '.join(repr_parts))
 
@@ -384,7 +384,7 @@ class Task(object):
         outputs = flatten(self.output())
         if len(outputs) == 0:
             warnings.warn(
-                "Task %r without outputs has no custom complete() method" % self,
+                "Task {0!r} without outputs has no custom complete() method".format(self),
                 stacklevel=2
             )
             return False
@@ -494,7 +494,7 @@ class Task(object):
         """
 
         traceback_string = traceback.format_exc()
-        return "Runtime error:\n%s" % traceback_string
+        return "Runtime error:\n{0!s}".format(traceback_string)
 
     def on_success(self):
         """
@@ -587,7 +587,7 @@ def getpaths(struct):
         try:
             s = list(struct)
         except TypeError:
-            raise Exception('Cannot map %s to Task/dict/list' % str(struct))
+            raise Exception('Cannot map {0!s} to Task/dict/list'.format(str(struct)))
 
         return [getpaths(r) for r in s]
 

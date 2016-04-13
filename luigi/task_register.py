@@ -128,7 +128,7 @@ class Register(abc.ABCMeta):
         if cls.task_namespace is None:
             return cls.__name__
         else:
-            return "%s.%s" % (cls.task_namespace, cls.__name__)
+            return "{0!s}.{1!s}".format(cls.task_namespace, cls.__name__)
 
     @classmethod
     def _get_reg(cls):
@@ -184,7 +184,7 @@ class Register(abc.ABCMeta):
             raise TaskClassNotFoundException(cls._missing_task_msg(name))
 
         if task_cls == cls.AMBIGUOUS_CLASS:
-            raise TaskClassAmbigiousException('Task %r is ambiguous' % name)
+            raise TaskClassAmbigiousException('Task {0!r} is ambiguous'.format(name))
         return task_cls
 
     @classmethod
@@ -223,9 +223,9 @@ class Register(abc.ABCMeta):
         ordered_tasks = sorted(weighted_tasks, key=lambda pair: pair[0])
         candidates = [task for (dist, task) in ordered_tasks if dist <= 5 and dist < len(task)]
         if candidates:
-            return "No task %s. Did you mean:\n%s" % (task_name, '\n'.join(candidates))
+            return "No task {0!s}. Did you mean:\n{1!s}".format(task_name, '\n'.join(candidates))
         else:
-            return "No task %s. Candidates are: %s" % (task_name, cls.tasks_str())
+            return "No task {0!s}. Candidates are: {1!s}".format(task_name, cls.tasks_str())
 
 
 def load_task(module, task_name, params_str):

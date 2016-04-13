@@ -89,7 +89,7 @@ class DynamicRequires(Task):
         with self.output().open('w') as f:
             for i, d in enumerate(dummy_targets):
                 for line in d.open('r'):
-                    print('%d: %s' % (i, line.strip()), file=f)
+                    print('{0:d}: {1!s}'.format(i, line.strip()), file=f)
 
 
 class DynamicRequiresOtherModule(Task):
@@ -719,7 +719,7 @@ class DynamicDependenciesTest(unittest.TestCase):
         # loop through output and verify
         f = t.output().open('r')
         for i in range(7):
-            self.assertEqual(f.readline().strip(), '%d: Done!' % i)
+            self.assertEqual(f.readline().strip(), '{0:d}: Done!'.format(i))
 
         self.assertTrue(time.time() - t0 < self.timeout)
 
@@ -768,7 +768,7 @@ class WorkerPingThreadTests(unittest.TestCase):
             time.sleep(0.1)  # yes, this is ugly but it's exactly what we need to test
         self.assertTrue(
             self._total_pings > 1,
-            msg="Didn't retry pings (%d pings performed)" % (self._total_pings,)
+            msg="Didn't retry pings ({0:d} pings performed)".format(self._total_pings)
         )
 
     def test_ping_thread_shutdown(self):
@@ -828,7 +828,7 @@ class WorkerEmailTest(LuigiTestCase):
             worker.add(a)
             self.assertEqual(self.waits, 2)  # should attempt to add it 3 times
             self.assertNotEqual(emails, [])
-            self.assertTrue(emails[0].find("Luigi: Framework error while scheduling %s" % (a,)) != -1)
+            self.assertTrue(emails[0].find("Luigi: Framework error while scheduling {0!s}".format(a)) != -1)
 
     @email_patch
     def test_complete_error(self, emails):
@@ -840,9 +840,9 @@ class WorkerEmailTest(LuigiTestCase):
         a = A()
         self.assertEqual(emails, [])
         self.worker.add(a)
-        self.assertTrue(emails[0].find("Luigi: %s failed scheduling" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} failed scheduling".format(a)) != -1)
         self.worker.run()
-        self.assertTrue(emails[0].find("Luigi: %s failed scheduling" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} failed scheduling".format(a)) != -1)
         self.assertFalse(a.has_run)
 
     @email_patch
@@ -855,7 +855,7 @@ class WorkerEmailTest(LuigiTestCase):
         a = A()
         self.assertEqual(emails, [])
         self.worker.add(a)
-        self.assertTrue(emails[0].find("Luigi: %s failed scheduling" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} failed scheduling".format(a)) != -1)
         self.worker.run()
         self.assertFalse(a.has_run)
 
@@ -869,9 +869,9 @@ class WorkerEmailTest(LuigiTestCase):
         a = A()
         self.assertEqual(emails, [])
         self.worker.add(a)
-        self.assertTrue(emails[0].find("Luigi: %s failed scheduling" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} failed scheduling".format(a)) != -1)
         self.worker.run()
-        self.assertTrue(emails[0].find("Luigi: %s failed scheduling" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} failed scheduling".format(a)) != -1)
         self.assertFalse(a.has_run)
 
     @email_patch
@@ -884,13 +884,13 @@ class WorkerEmailTest(LuigiTestCase):
         self.worker.add(a)
         self.assertEqual(emails, [])
         self.worker.run()
-        self.assertTrue(emails[0].find("Luigi: %s FAILED" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} FAILED".format(a)) != -1)
 
     @email_patch
     def test_task_process_dies(self, emails):
         a = SuicidalWorker(signal.SIGKILL)
         luigi.build([a], workers=2, local_scheduler=True)
-        self.assertTrue(emails[0].find("Luigi: %s FAILED" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} FAILED".format(a)) != -1)
         self.assertTrue(emails[0].find("died unexpectedly with exit code -9") != -1)
 
     @email_patch
@@ -903,7 +903,7 @@ class WorkerEmailTest(LuigiTestCase):
 
         a = A()
         luigi.build([a], workers=2, local_scheduler=True)
-        self.assertTrue(emails[0].find("Luigi: %s FAILED" % (a,)) != -1)
+        self.assertTrue(emails[0].find("Luigi: {0!s} FAILED".format(a)) != -1)
         self.assertTrue(emails[0].find("timed out and was terminated.") != -1)
 
     @with_config(dict(worker=dict(retry_external_tasks='true')))

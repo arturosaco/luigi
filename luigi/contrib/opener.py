@@ -92,7 +92,7 @@ class OpenerRegistry(object):
 
         """
         if name not in self.registry:
-            raise NoOpenerError("No opener for %s" % name)
+            raise NoOpenerError("No opener for {0!s}".format(name))
         index = self.registry[name]
         return self.openers[index]
 

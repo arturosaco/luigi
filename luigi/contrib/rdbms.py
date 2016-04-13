@@ -86,7 +86,7 @@ class CopyToTable(luigi.task.MixinNaiveBulkComplete, luigi.Task):
         """
         if len(self.columns[0]) == 1:
             # only names of columns specified, no types
-            raise NotImplementedError("create_table() not implemented for %r and columns types not specified" % self.table)
+            raise NotImplementedError("create_table() not implemented for {0!r} and columns types not specified".format(self.table))
         elif len(self.columns[0]) == 2:
             # if columns is specified as (name, type) tuples
             coldefs = ','.join(

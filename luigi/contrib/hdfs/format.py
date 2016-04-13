@@ -53,7 +53,7 @@ class HdfsAtomicWriteDirPipe(luigi.format.OutputPipeProcessWrapper):
     def __init__(self, path, data_extension=""):
         self.path = path
         self.tmppath = hdfs_config.tmppath(self.path)
-        self.datapath = self.tmppath + ("/data%s" % data_extension)
+        self.datapath = self.tmppath + ("/data{0!s}".format(data_extension))
         super(HdfsAtomicWriteDirPipe, self).__init__(load_hadoop_cmd() + ['fs', '-put', '-', self.datapath])
 
     def abort(self):
@@ -98,7 +98,7 @@ class PlainDirFormat(luigi.format.Format):
 
     def pipe_reader(self, path):
         # exclude underscore-prefixedfiles/folders (created by MapReduce)
-        return HdfsReadPipe("%s/[^_]*" % path)
+        return HdfsReadPipe("{0!s}/[^_]*".format(path))
 
     def pipe_writer(self, path):
         return HdfsAtomicWriteDirPipe(path)

@@ -35,7 +35,7 @@ class MyScaldingTask(scalding.ScaldingJobTask):
 
 class ScaldingTest(unittest.TestCase):
     def setUp(self):
-        self.scalding_home = os.path.join(tempfile.gettempdir(), 'scalding-%09d' % random.randint(0, 999999999))
+        self.scalding_home = os.path.join(tempfile.gettempdir(), 'scalding-{0:09d}'.format(random.randint(0, 999999999)))
         os.mkdir(self.scalding_home)
         self.lib_dir = os.path.join(self.scalding_home, 'lib')
         os.mkdir(self.lib_dir)

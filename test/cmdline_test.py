@@ -36,7 +36,7 @@ class SomeTask(luigi.Task):
     n = luigi.IntParameter()
 
     def output(self):
-        return MockTarget('/tmp/test_%d' % self.n)
+        return MockTarget('/tmp/test_{0:d}'.format(self.n))
 
     def run(self):
         f = self.output().open('w')

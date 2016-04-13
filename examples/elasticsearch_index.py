@@ -44,7 +44,7 @@ class FakeDocuments(luigi.Task):
         today = datetime.date.today()
         with self.output().open('w') as output:
             for i in range(5):
-                output.write(json.dumps({'_id': i, 'text': 'Hi %s' % i,
+                output.write(json.dumps({'_id': i, 'text': 'Hi {0!s}'.format(i),
                                          'date': str(today)}))
                 output.write('\n')
 
@@ -56,7 +56,7 @@ class FakeDocuments(luigi.Task):
         :return: the target output for this task.
         :rtype: object (:py:class:`luigi.target.Target`)
         """
-        return luigi.LocalTarget(path='/tmp/_docs-%s.ldj' % self.date)
+        return luigi.LocalTarget(path='/tmp/_docs-{0!s}.ldj'.format(self.date))
 
 
 class IndexDocuments(CopyToIndex):

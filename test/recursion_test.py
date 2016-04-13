@@ -28,7 +28,7 @@ class Popularity(luigi.Task):
     date = luigi.DateParameter(default=datetime.date.today() - datetime.timedelta(1))
 
     def output(self):
-        return MockTarget('/tmp/popularity/%s.txt' % self.date.strftime('%Y-%m-%d'))
+        return MockTarget('/tmp/popularity/{0!s}.txt'.format(self.date.strftime('%Y-%m-%d')))
 
     def requires(self):
         return Popularity(self.date - datetime.timedelta(1))
